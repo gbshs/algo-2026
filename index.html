@@ -188,6 +188,13 @@ sub{font-size:.7em; line-height:0; vertical-align:-.25em; letter-spacing:0}
   font-size:.76rem; font-weight:700; color:var(--muted); padding-bottom:3px}
 .bar.fix{background:var(--fixed-bg); border-color:var(--fixed-line); color:var(--fixed-fg)}
 .bar.seg{border-color:var(--active); border-width:2px}
+.bar.srt{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active)}
+.lableg{display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:10px; font-size:.78rem; color:var(--muted)}
+.lableg span{display:flex; align-items:center; gap:6px}
+.lableg i{width:14px; height:14px; border-radius:4px; border:1px solid var(--line); background:var(--line-soft)}
+.lableg i.f{background:var(--fixed-bg); border-color:var(--fixed-line)}
+.lableg i.c{background:var(--active); border-color:var(--active)}
+.lableg i.s{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active)}
 .bar.cmp{background:var(--active); border-color:var(--active); color:#fff}
 :root:not([data-theme="light"]) .bar.cmp, :root[data-theme="dark"] .bar.cmp{color:#0E1A2B}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .bar.cmp{color:#fff}}
@@ -428,22 +435,12 @@ while i &gt; 1:
 <div class="step"><div class="lbl">2단</div><div class="code"><span><b>6행</b><em>RETURN Merge(left, right)</em></span><span><b>10~14행</b><em>IF L의 맨 앞 &lt;= R의 맨 앞 THEN …</em><i>양쪽 맨 앞을 비교해 꺼낸다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">5</span><span class="cell sm">9</span></span><span class="grp"><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">7</span><span class="cell sm">8</span></span></div><p class="note">조각 2개. 각 조각 안은 정렬되어 있습니다.</p></div></div>
 <div class="step"><div class="lbl">3단</div><div class="code"><span><b>6행</b><em>RETURN Merge(left, right)</em></span><span><b>10~14행</b><em>IF L의 맨 앞 &lt;= R의 맨 앞 THEN …</em><i>양쪽 맨 앞을 비교해 꺼낸다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span><span class="cell sm">7</span><span class="cell sm">8</span><span class="cell sm">9</span></span></div><p class="note">끝났습니다.</p></div></div>
 </div></div>
-<div class="block"><h3>합치기 한 번을 자세히 — <span class="tag"></span>1 3 8 9 와 3 4 7 8</h3>
+<div class="block"><h3>합치기 한 번을 자세히 — <span class="tag"></span>1 2 5 9와 3 4 7 8</h3>
 <p class="note">
 양쪽이 <b>이미 정렬되어 있으니</b>, 다음에 놓을 값은 <b>양쪽 맨 앞 두 개 중 하나</b>일 수밖에 없습니다.
 전체를 뒤질 필요가 없습니다. 이것이 병합 정렬의 핵심입니다.
 </p><div class="scroll"><table>
-<thead><tr><th>차례</th><th>왼쪽에 남은 것</th><th>오른쪽에 남은 것</th><th>비교</th><th>꺼낸 값</th><th>지금까지 만든 것</th></tr></thead><tbody>
-<tr><td class="n">1</td><td class="n">1 3 8 9</td><td class="n">3 4 7 8</td><td class="n">1 와 3</td><td class="n">1</td><td class="n">—</td></tr>
-<tr><td class="n">2</td><td class="n">3 8 9</td><td class="n">3 4 7 8</td><td class="n">3 와 3</td><td class="n">3</td><td class="n">1</td></tr>
-<tr><td class="n">3</td><td class="n">8 9</td><td class="n">3 4 7 8</td><td class="n">8 와 3</td><td class="n">3</td><td class="n">1 3</td></tr>
-<tr><td class="n">4</td><td class="n">8 9</td><td class="n">4 7 8</td><td class="n">8 와 4</td><td class="n">4</td><td class="n">1 3 3</td></tr>
-<tr><td class="n">5</td><td class="n">8 9</td><td class="n">7 8</td><td class="n">8 와 7</td><td class="n">7</td><td class="n">1 3 3 4</td></tr>
-<tr><td class="n">6</td><td class="n">8 9</td><td class="n">8</td><td class="n">8 와 8</td><td class="n">8</td><td class="n">1 3 3 4 7</td></tr>
-<tr><td class="n">7</td><td class="n">9</td><td class="n">8</td><td class="n">9 와 8</td><td class="n">8</td><td class="n">1 3 3 4 7 8</td></tr>
-<tr><td class="n">8</td><td class="n">9</td><td class="n">—</td><td class="n"><span style="color:var(--muted)">한쪽이 비었음</span></td><td class="n">9 <span style="color:var(--muted)">(비교 없이)</span></td><td class="n">1 3 3 4 7 8 8</td></tr>
-<tr><td class="n"><b>끝</b></td><td></td><td></td><td></td><td></td><td class="n"><b>1 3 3 4 7 8 8 9</b></td></tr>
-</tbody></table></div></div>
+<thead><tr><th>차례</th><th>왼쪽에 남은 것</th><th>오른쪽에 남은 것</th><th>L의 맨 앞 ≤ R의 맨 앞</th><th>꺼낸 값</th><th>지금까지 만든 것</th></tr></thead><tbody><tr><td class="n">1</td><td class="n">1 2 5 9</td><td class="n">3 4 7 8</td><td class="n">1 ≤ 3 · 참</td><td class="n">1 <span style="color:var(--muted)">(왼쪽)</span></td><td class="n">—</td></tr><tr><td class="n">2</td><td class="n">2 5 9</td><td class="n">3 4 7 8</td><td class="n">2 ≤ 3 · 참</td><td class="n">2 <span style="color:var(--muted)">(왼쪽)</span></td><td class="n">1</td></tr><tr><td class="n">3</td><td class="n">5 9</td><td class="n">3 4 7 8</td><td class="n">5 ≤ 3 · 거짓</td><td class="n">3 <span style="color:var(--muted)">(오른쪽)</span></td><td class="n">1 2</td></tr><tr><td class="n">4</td><td class="n">5 9</td><td class="n">4 7 8</td><td class="n">5 ≤ 4 · 거짓</td><td class="n">4 <span style="color:var(--muted)">(오른쪽)</span></td><td class="n">1 2 3</td></tr><tr><td class="n">5</td><td class="n">5 9</td><td class="n">7 8</td><td class="n">5 ≤ 7 · 참</td><td class="n">5 <span style="color:var(--muted)">(왼쪽)</span></td><td class="n">1 2 3 4</td></tr><tr><td class="n">6</td><td class="n">9</td><td class="n">7 8</td><td class="n">9 ≤ 7 · 거짓</td><td class="n">7 <span style="color:var(--muted)">(오른쪽)</span></td><td class="n">1 2 3 4 5</td></tr><tr><td class="n">7</td><td class="n">9</td><td class="n">8</td><td class="n">9 ≤ 8 · 거짓</td><td class="n">8 <span style="color:var(--muted)">(오른쪽)</span></td><td class="n">1 2 3 4 5 7</td></tr><tr><td class="n">8</td><td class="n">9</td><td class="n">—</td><td class="n"><span style="color:var(--muted)">한쪽이 비었음</span></td><td class="n">9 <span style="color:var(--muted)">(비교 없이)</span></td><td class="n">1 2 3 4 5 7 8</td></tr><tr><td class="n"><b>끝</b></td><td></td><td></td><td></td><td></td><td class="n"><b>1 2 3 4 5 7 8 9</b></td></tr></tbody></table></div><p class="note" style="margin-top:10px">이 표는 <b>마지막 합치기 한 번</b>입니다. 비교가 7번 일어났습니다. 전체 17번 중 마지막 7번이고, 나머지 10번은 아래 단계들에서 이미 일어났습니다.</p></div>
 <div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>17</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>12</td><td></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>12</td><td></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">데이터가 무엇이든 12~17번 사이입니다. 나눔의 깊이가 log<sub>2</sub>8 = <b>3단계</b>이고 각 단계에서 많아야 8번 비교하므로 8 × 3 = 24번이 상한입니다. 그래서 <b>O(n log n)</b>이고, <b>입력에 거의 흔들리지 않습니다.</b></p></div><div class="callout">
 <p>여덟 개를 하나짜리까지 나누는 데 <b>세 번</b> 나눴습니다. 8 → 4 → 2 → 1 이지요.
 n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>n</b> 입니다.</p>
@@ -477,10 +474,7 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </tbody></table></div></div>
 <div class="block"><h3>이어 붙이기</h3>
 <p class="note">나눈 뒤에는 <b>작은 쪽 + 기준 + 큰 쪽</b> 순서로 붙이기만 하면 됩니다. 기준보다 작은 것은 전부 왼쪽에, 큰 것은 전부 오른쪽에 있으니까요.</p>
-<div class="scroll">
-<div class="step"><div class="lbl">맨 위</div><div class="code"><span><b>3행</b><em>pivot ← A의 가운데 값</em></span><span><b>4~6행</b><em>less · same · more 로 나눈다</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span><span class="cell sm">2</span><span class="cell sm">1</span><span class="cell sm">3</span><span class="cell sm">4</span></span><span class="grp"><span class="cell sm">7</span></span><span class="grp"><span class="cell sm">9</span><span class="cell sm">8</span></span></div><p class="note">기준 <b>7</b>로 나눈 결과입니다. 이제 왼쪽 덩이와 오른쪽 덩이만 각각 정렬하면 됩니다.</p></div></div>
-<div class="step"><div class="lbl">붙인 뒤</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span><span class="cell sm">7</span><span class="cell sm">8</span><span class="cell sm">9</span></span></div><p class="note"><b>1 2 3 4 5 7 8 9</b></p></div></div>
-</div></div>
+<div class="scroll"><div class="step"><div class="lbl">붙임 1</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm active">4</span></span><span class="grp"><span class="cell sm">5</span></span></div><div class="row" style="margin:7px 0 5px; color:var(--muted); font-size:.83rem">↓ 작은 쪽 + 기준 + 큰 쪽 순서로 이어 붙이면</div><div class="row groups"><span class="grp"><span class="cell sm fixed">4</span><span class="cell sm fixed">5</span></span></div><p class="note">가장 안쪽부터 되돌아 올라옵니다. 기준 <b>4</b>보다 작은 것이 없었으므로 왼쪽은 비어 있습니다.</p></div></div><div class="step"><div class="lbl">붙임 2</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">2</span></span><span class="grp"><span class="cell sm active">3</span></span><span class="grp"><span class="cell sm">4</span><span class="cell sm">5</span></span></div><div class="row" style="margin:7px 0 5px; color:var(--muted); font-size:.83rem">↓ 작은 쪽 + 기준 + 큰 쪽 순서로 이어 붙이면</div><div class="row groups"><span class="grp"><span class="cell sm fixed">2</span><span class="cell sm fixed">3</span><span class="cell sm fixed">4</span><span class="cell sm fixed">5</span></span></div><p class="note">방금 만든 <b>4 5</b>가 큰 쪽으로 그대로 들어옵니다.</p></div></div><div class="step"><div class="lbl">붙임 3</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm active">1</span></span><span class="grp"><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span></span></div><div class="row" style="margin:7px 0 5px; color:var(--muted); font-size:.83rem">↓ 작은 쪽 + 기준 + 큰 쪽 순서로 이어 붙이면</div><div class="row groups"><span class="grp"><span class="cell sm fixed">1</span><span class="cell sm fixed">2</span><span class="cell sm fixed">3</span><span class="cell sm fixed">4</span><span class="cell sm fixed">5</span></span></div><p class="note">기준 <b>1</b>이 가장 작은 값이라 왼쪽이 비었습니다. 이것이 맨 앞을 기준으로 골랐을 때 늘 일어나는 일입니다.</p></div></div><div class="step"><div class="lbl">붙임 4</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm active">8</span></span><span class="grp"><span class="cell sm">9</span></span></div><div class="row" style="margin:7px 0 5px; color:var(--muted); font-size:.83rem">↓ 작은 쪽 + 기준 + 큰 쪽 순서로 이어 붙이면</div><div class="row groups"><span class="grp"><span class="cell sm fixed">8</span><span class="cell sm fixed">9</span></span></div><p class="note">오른쪽 덩이 <b>9 8</b>도 같은 방법으로 정리됩니다.</p></div></div><div class="step"><div class="lbl">붙임 5</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span></span><span class="grp"><span class="cell sm active">7</span></span><span class="grp"><span class="cell sm">8</span><span class="cell sm">9</span></span></div><div class="row" style="margin:7px 0 5px; color:var(--muted); font-size:.83rem">↓ 작은 쪽 + 기준 + 큰 쪽 순서로 이어 붙이면</div><div class="row groups"><span class="grp"><span class="cell sm fixed">1</span><span class="cell sm fixed">2</span><span class="cell sm fixed">3</span><span class="cell sm fixed">4</span><span class="cell sm fixed">5</span><span class="cell sm fixed">7</span><span class="cell sm fixed">8</span><span class="cell sm fixed">9</span></span></div><p class="note">맨 처음 고른 기준 <b>7</b>이 마지막에 제자리로 들어갑니다. 사실 7의 자리는 <b>첫 나눔에서 이미 정해져 있었습니다.</b></p></div></div></div></div>
 <div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>21</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>17</td><td></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>17</td><td></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">정렬된 데이터에서도 비교 횟수가 크게 늘어나지 않는 것은 <b>가운데 자리의 값</b>을 기준으로 골랐기 때문입니다. 만약 맨 앞 값을 기준으로 고르면 정렬된 데이터에서 매번 한쪽으로 쏠려 선택 정렬처럼 <b>O(n²)</b>이 됩니다. 평균은 <b>O(n log n)</b>입니다.</p></div><div class="callout">
 <p>기준을 <b>가운데</b> 값으로 고르면 대개 양쪽이 비슷하게 나뉘어 O(n log n)이 됩니다.</p>
 <p>그런데 늘 <b>맨 앞</b>을 기준으로 고르고 이미 정렬된 데이터를 넣으면, 한쪽이 텅 비고 다른 쪽에 전부 몰립니다.
@@ -515,7 +509,7 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </div>
 <div class="labkey" id="labKey"></div>
 <div class="bars" id="labBars"></div>
-<input type="range" id="labRange" min="0" max="0" value="0">
+<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><input type="range" id="labRange" min="0" max="0" value="0">
 <div class="ctl" style="margin:12px 0 0">
 <button id="labPlay" class="pri">▶ 재생</button>
 <button id="labPrev">◀ 이전</button>
@@ -582,7 +576,8 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 function mk(A0){ return {A:A0.slice(), F:[], c:0, m:0}; }
 function snap(S, o){
   var f = {arr:S.A.slice(), c:S.c, m:S.m, cmp:null, act:null,
-           fixL:S.fixL||0, fixR:S.fixR||0, seg:null, key:null, msg:''};
+           fixL:S.fixL||0, fixR:S.fixR||0, seg:null, key:null, msg:'',
+           done:S.done?S.done.slice():null, srt:S.srt?S.srt.slice():null};
   for(var k in o) f[k]=o[k];
   S.F.push(f);
 }
@@ -639,7 +634,8 @@ function recIns(a){
 }
 function recMer(a){
   var S=mk(a), A=S.A, n=A.length;
-  snap(S,{msg:'시작'});
+  S.srt=[]; for(var z=0;z<n;z++) S.srt.push(0);
+  snap(S,{msg:'시작 — 아직 아무 조각도 합치지 않았습니다'});
   (function ms(lo,hi){
     if(hi-lo<=1) return;
     var mid=(lo+hi)>>1;
@@ -651,17 +647,20 @@ function recMer(a){
       if(L[i]<=R[j]) A[k++]=L[i++]; else A[k++]=R[j++];
       S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'A['+(k-1)+'] ← '+A[k-1]});
     }
-    while(i<L.length){ A[k++]=L[i++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 붙임'}); }
-    while(j<R.length){ A[k++]=R[j++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 붙임'}); }
+    while(i<L.length){ A[k++]=L[i++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 비교 없이 붙임'}); }
+    while(j<R.length){ A[k++]=R[j++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 비교 없이 붙임'}); }
+    for(var q=lo;q<hi;q++) S.srt[q]=1;
+    snap(S,{msg:'['+lo+'..'+(hi-1)+'] 조각이 정렬되었습니다'});
   })(0,n);
   S.fixL=n; snap(S,{msg:'끝'});
   return S;
 }
 function recQui(a){
   var S=mk(a), A=S.A, n=A.length;
+  S.done=[]; for(var z=0;z<n;z++) S.done.push(0);
   snap(S,{msg:'시작'});
   (function qs(lo,hi){
-    if(hi-lo<=1) return;
+    if(hi-lo<=1){ if(hi>lo){ S.done[lo]=1; snap(S,{msg:'A['+lo+'] 하나뿐 — 그대로 확정'}); } return; }
     var seg=A.slice(lo,hi), p=seg[seg.length>>1];
     snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 기준 = '+p});
     var less=[],same=[],more=[];
@@ -671,7 +670,8 @@ function recQui(a){
     }
     var out=less.concat(same,more);
     for(var u=0;u<out.length;u++){ A[lo+u]=out[u]; S.m++; }
-    snap(S,{seg:[lo,hi-1],msg:'작은 것 '+less.length+'개 · 같은 것 '+same.length+'개 · 큰 것 '+more.length+'개로 나눔'});
+    for(var q=lo+less.length;q<lo+less.length+same.length;q++) S.done[q]=1;
+    snap(S,{seg:[lo,hi-1],msg:'작은 것 '+less.length+'개 · 같은 것 '+same.length+'개 · 큰 것 '+more.length+'개로 나눔 — 기준 '+p+'의 자리가 확정되었습니다'});
     qs(lo, lo+less.length);
     qs(lo+less.length+same.length, hi);
   })(0,n);
@@ -703,6 +703,8 @@ function draw(){
     var cls='bar';
     if(f.fixL && i<f.fixL) cls+=' fix';
     if(f.fixR && i>=f.arr.length-f.fixR) cls+=' fix';
+    if(f.srt && f.srt[i]) cls+=' srt';
+    if(f.done && f.done[i]) cls+=' fix';
     if(f.seg && i>=f.seg[0] && i<=f.seg[1]) cls+=' seg';
     if(f.cmp && f.cmp.indexOf(i)>=0) cls+=' cmp';
     if(f.act && f.act.indexOf(i)>=0) cls+=' act';
