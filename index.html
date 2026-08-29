@@ -1,0 +1,879 @@
+<title>다섯 정렬 따라가기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#F3F2EF; --surface:#FFFFFF; --ink:#1A1917; --muted:#6C6A64;
+  --line:#DBD8D1; --line-soft:#EAE8E2;
+  --fixed:#1750C4; --fixed-bg:#1750C4; --fixed-line:#1750C4; --fixed-fg:#FFFFFF;
+  --active:#1750C4; --active-bg:#FFFFFF; --active-line:#1750C4;
+  --shadow:0 1px 2px rgba(26,25,23,.07), 0 10px 28px rgba(26,25,23,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
+    --line:#38352F; --line-soft:#2B2926;
+    --fixed:#86B4FF; --fixed-bg:#86B4FF; --fixed-line:#86B4FF; --fixed-fg:#0E1A2B;
+    --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
+  --line:#38352F; --line-soft:#2B2926;
+  --fixed:#86B4FF; --fixed-bg:#86B4FF; --fixed-line:#86B4FF; --fixed-fg:#0E1A2B;
+  --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Gothic A1", system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  font-size:16px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  word-break:keep-all; overflow-wrap:break-word;
+}
+p, li, td, th, .note, .lede{text-wrap:pretty}
+.pseudo li, .cell, code{word-break:normal; overflow-wrap:normal}
+.wrap{max-width:940px; margin:0 auto; padding:0 20px 96px}
+
+h1,h2,h3{font-family:"Gowun Batang", "Nanum Myeongjo", serif; text-wrap:balance; margin:0}
+h1{font-size:clamp(2rem,5vw,2.9rem); font-weight:700; letter-spacing:-.01em; line-height:1.25}
+h2{font-size:clamp(1.5rem,3.4vw,2rem); font-weight:700; line-height:1.3}
+h3{font-size:1.12rem; font-weight:700; line-height:1.4}
+p{margin:0}
+strong{font-weight:600}
+
+header.top{padding:72px 0 40px; border-bottom:1px solid var(--line)}
+.eyebrow{font-size:.76rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:14px}
+.lede{margin-top:18px; color:var(--muted); font-size:1.05rem}
+
+nav.jump{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line); margin-bottom:8px}
+nav.jump ul{display:flex; gap:4px; list-style:none; margin:0 auto; padding:10px 20px;
+  max-width:940px; overflow-x:auto}
+nav.jump a{display:block; padding:5px 11px; border-radius:999px; text-decoration:none;
+  color:var(--muted); font-size:.86rem; font-weight:500; white-space:nowrap}
+nav.jump a:hover{color:var(--ink); background:var(--line-soft)}
+nav.jump a:focus-visible{outline:2px solid var(--active); outline-offset:2px}
+
+section.algo{padding:56px 0; border-bottom:1px solid var(--line)}
+.mark{display:flex; align-items:baseline; gap:14px; margin-bottom:6px}
+.mark .num{font-family:"Gothic A1", sans-serif; font-size:.8rem; font-weight:700;
+  color:var(--active); letter-spacing:.08em}
+.idea{margin:20px 0 0; padding:18px 22px; background:var(--surface);
+  border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow)}
+
+.block{margin-top:34px}
+.block > h3{margin-bottom:14px}
+.scroll{overflow-x:auto; padding-bottom:6px}
+
+.row{display:flex; gap:5px; align-items:center; margin:0}
+.row.gap{margin-top:7px}
+.cell{
+  font-family:"Gowun Batang", serif; font-variant-numeric:tabular-nums;
+  min-width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); border-radius:7px; background:var(--surface);
+  font-size:.98rem; font-weight:500;
+}
+.cell.sm{min-width:31px; height:31px; font-size:.86rem; border-radius:6px}
+.cell.fixed{background:var(--fixed-bg); border-color:var(--fixed-line); color:var(--fixed-fg); font-weight:700}
+.cell.active{background:var(--active-bg); border-color:var(--active-line); border-width:2px; color:var(--active); font-weight:700}
+.cell.ghost{opacity:.32}
+.row.groups{gap:14px}
+.grp{display:inline-flex; gap:4px; padding:5px; border:1px dashed var(--line);
+  border-radius:9px; background:var(--line-soft)}
+.grp.hi{border-color:var(--active-line); background:var(--active-bg)}
+
+.step{display:grid; grid-template-columns:74px minmax(0,1fr) 232px; gap:16px; align-items:start;
+  padding:14px 0; border-top:1px solid var(--line-soft)}
+.step > .lbl{grid-column:1}
+.step > .body{grid-column:2}
+.step > .code{grid-column:3}
+.code{padding-top:6px}
+.code span{display:block}
+.code span + span{margin-top:11px}
+.code b{display:block; color:var(--active); font-weight:700; font-size:.72rem;
+  letter-spacing:.06em; font-variant-numeric:tabular-nums}
+.code em{display:block; font-style:normal; color:var(--ink); font-size:.8rem;
+  line-height:1.5; margin-top:2px; word-break:normal}
+.code i{display:block; font-style:normal; color:var(--muted); font-size:.75rem;
+  line-height:1.5; margin-top:1px}
+.pseudo{margin-top:22px; background:var(--surface); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden; box-shadow:var(--shadow)}
+.pseudo .ttl{padding:10px 18px; border-bottom:1px solid var(--line); font-size:.8rem;
+  letter-spacing:.02em; color:var(--muted); font-weight:700}
+.pseudo ol{margin:0; padding:14px 18px 16px 0; list-style:none; counter-reset:ln; overflow-x:auto}
+.pseudo li{counter-increment:ln; display:flex; gap:14px; white-space:pre; font-size:.87rem;
+  font-family:"Gothic A1", sans-serif; line-height:1.65}
+.pseudo li::before{content:counter(ln); width:44px; text-align:right; color:var(--muted);
+  font-variant-numeric:tabular-nums; flex:none; font-size:.8rem}
+.range{margin-top:14px; border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  background:var(--surface)}
+.range .ttl{padding:9px 18px; border-bottom:1px solid var(--line); font-size:.8rem;
+  color:var(--muted); font-weight:700}
+.range table{margin:0}
+.range th,.range td{padding:11px 18px; vertical-align:top}
+.range td:first-child{white-space:nowrap; font-weight:600; font-size:.86rem; width:1%}
+.range td:nth-child(2){white-space:nowrap; color:var(--active); font-weight:600;
+  font-size:.86rem; width:1%}
+.range td:last-child{color:var(--muted); font-size:.87rem; line-height:1.65}
+.range td b{color:var(--ink)}
+.range tbody tr:last-child td{border-bottom:none}
+.step:first-of-type{border-top:none}
+.step .lbl{font-family:"Gothic A1", monospace; font-size:.8rem; color:var(--muted);
+  font-weight:600; padding-top:9px; letter-spacing:.02em}
+.note{margin-top:7px; font-size:.87rem; color:var(--muted)}
+.note b{color:var(--ink); font-weight:600}
+
+code{font-family:"Gothic A1", monospace; font-size:.92em; padding:2px 7px;
+  background:var(--line-soft); border-radius:5px; letter-spacing:.04em}
+table{border-collapse:collapse; width:100%; font-size:.9rem; margin-top:4px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--line-soft)}
+th{font-size:.76rem; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);
+  font-weight:600; border-bottom:1px solid var(--line); white-space:nowrap}
+td.n{font-family:"Gothic A1", sans-serif; font-variant-numeric:tabular-nums; white-space:nowrap}
+tbody tr:hover{background:var(--line-soft)}
+
+.legend{display:flex; flex-wrap:wrap; gap:10px 24px; margin-top:22px; padding:16px 20px;
+  background:var(--surface); border:1px solid var(--line); border-radius:10px}
+.legend div{display:flex; align-items:center; gap:9px; font-size:.87rem; color:var(--muted)}
+.key{width:22px; height:22px; border-radius:6px; border:1px solid var(--line); background:var(--surface)}
+.key.f{background:var(--fixed-bg); border-color:var(--fixed-line)}
+.key.a{background:var(--active-bg); border-color:var(--active-line); border-width:2px}
+
+.callout{margin-top:26px; padding:20px 24px; border:1px solid var(--line);
+  border-left:4px solid var(--active); background:var(--surface); border-radius:0 10px 10px 0;
+  box-shadow:var(--shadow)}
+.callout p{color:var(--ink); font-weight:500}
+.callout p + p{margin-top:8px}
+
+.tree{margin-top:8px}
+.tnode{display:flex; align-items:center; gap:10px; padding:5px 0; flex-wrap:wrap}
+.tnode .tag{font-size:.78rem; color:var(--muted); min-width:74px; font-weight:500}
+.arrow{color:var(--muted); font-family:"Gothic A1", monospace}
+
+
+.range.lines{overflow-x:auto}
+.range.lines td:first-child{color:var(--muted); font-weight:600; text-align:right; padding-right:0}
+.range.lines td:nth-child(2){font-family:"Gothic A1", monospace; letter-spacing:.02em; white-space:pre}
+.range.pat{overflow-x:auto}
+.range.pat td:first-child{white-space:pre; font-family:"Gothic A1", monospace; font-weight:500;
+  color:var(--ink); font-size:.83rem; letter-spacing:.02em; line-height:1.6; width:1%}
+.range.pat td:nth-child(2){color:var(--active); font-weight:700; white-space:nowrap; text-align:center}
+.range td:nth-child(2):empty{padding:0; width:0}
+.range.cnt td:nth-child(2){font-variant-numeric:tabular-nums; text-align:right}
+.bigo{margin-top:18px; padding:22px 24px; background:var(--surface); border:1px solid var(--line);
+  border-left:4px solid var(--active); border-radius:0 10px 10px 0; box-shadow:var(--shadow)}
+.bigo .q{font-family:"Gowun Batang","Nanum Myeongjo",serif; font-size:1.18rem; font-weight:700;
+  line-height:1.5; text-align:center; margin:4px 0 6px}
+sub{font-size:.7em; line-height:0; vertical-align:-.25em; letter-spacing:0}
+.lab{margin-top:18px; background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  padding:20px; box-shadow:var(--shadow)}
+.ctl{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; margin-bottom:16px}
+.ctl label{font-size:.82rem; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:6px}
+.lab select,.lab input[type=text],.lab input[type=number]{font:inherit; font-size:.86rem; padding:5px 9px;
+  border:1px solid var(--line); border-radius:7px; background:var(--paper); color:var(--ink)}
+.lab button{font:inherit; font-size:.86rem; font-weight:600; padding:6px 14px; cursor:pointer;
+  border:1px solid var(--line); border-radius:7px; background:var(--paper); color:var(--ink)}
+.lab button:hover{border-color:var(--active); color:var(--active)}
+.lab button.pri{background:var(--active); border-color:var(--active); color:#fff}
+:root:not([data-theme="light"]) .lab button.pri, :root[data-theme="dark"] .lab button.pri{color:#0E1A2B}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .lab button.pri{color:#fff}}
+.bars{display:flex; align-items:flex-end; gap:5px; height:104px; padding:0 2px; margin:6px 0 4px}
+.bar{flex:1; min-width:0; background:var(--line-soft); border:1px solid var(--line); border-radius:5px 5px 0 0;
+  display:flex; align-items:flex-end; justify-content:center; transition:height .12s, background .12s;
+  font-size:.76rem; font-weight:700; color:var(--muted); padding-bottom:3px}
+.bar.fix{background:var(--fixed-bg); border-color:var(--fixed-line); color:var(--fixed-fg)}
+.bar.seg{border-color:var(--active); border-width:2px}
+.bar.cmp{background:var(--active); border-color:var(--active); color:#fff}
+:root:not([data-theme="light"]) .bar.cmp, :root[data-theme="dark"] .bar.cmp{color:#0E1A2B}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .bar.cmp{color:#fff}}
+.bar.act{outline:3px solid var(--active); outline-offset:1px}
+.labfoot{display:flex; flex-wrap:wrap; gap:8px 20px; align-items:center; margin-top:12px;
+  padding-top:12px; border-top:1px solid var(--line-soft); font-size:.85rem; color:var(--muted)}
+.labfoot b{color:var(--ink); font-variant-numeric:tabular-nums}
+.labmsg{flex:1 1 220px; min-height:1.4em; color:var(--ink); font-weight:500}
+.labkey{font-size:.85rem; color:var(--muted); min-height:1.3em; margin-bottom:4px}
+.labkey b{color:var(--active); font-size:1.05em}
+input[type=range]{width:100%; margin:8px 0 0; accent-color:var(--active)}
+.mini{height:9px; background:var(--active); border-radius:5px}
+#cmpTable td:first-child{font-weight:700; color:var(--blue); white-space:nowrap; width:1%}
+#cmpTable td:nth-child(3){width:55%}
+.fill select,.fill input{font:inherit; font-size:.86rem; padding:4px 7px; border:1px solid var(--line);
+  border-radius:6px; background:var(--paper); color:var(--ink); width:100%; max-width:80px}
+.fill select.good,.fill input.good{border-color:#1a7f4b; background:rgba(26,127,75,.09)}
+.fill select.bad,.fill input.bad{border-color:#c0392b; background:rgba(192,57,43,.09)}
+.fmsg{margin-top:12px; font-size:.9rem; font-weight:600; min-height:1.3em}
+.fmsg.good{color:#1a7f4b} .fmsg.bad{color:#c0392b}
+#qCode{white-space:pre; font-family:"Gothic A1", monospace; font-size:.87rem; line-height:1.65;
+  background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:0 0 14px;
+  overflow-x:auto}
+#qOpts{display:flex; flex-wrap:wrap; gap:8px}
+.opt{min-width:84px}
+.opt.good{background:rgba(26,127,75,.12); border-color:#1a7f4b; color:#1a7f4b}
+.opt.bad{background:rgba(192,57,43,.12); border-color:#c0392b; color:#c0392b}
+.qwhy{margin-top:13px; font-size:.88rem; min-height:1.4em; color:var(--muted)}
+.qwhy.good{color:#1a7f4b; font-weight:600} .qwhy.bad{color:#c0392b; font-weight:600}
+@media (max-width:640px){ .bars{height:88px; gap:3px} .bar{font-size:.7rem} }
+@media print{ .lab{display:none} }
+
+footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
+@media (max-width:1000px){
+  .step{grid-template-columns:74px minmax(0,1fr); }
+  .step > .code{grid-column:2; padding-top:2px}
+}
+@media (max-width:640px){
+  .step{grid-template-columns:1fr; gap:6px}
+  .step > .lbl, .step > .body, .step > .code{grid-column:1}
+  .step .lbl{padding-top:0}
+  body{font-size:15px}
+}
+@media print{
+  nav.jump{display:none} body{background:#fff}
+  section.algo{page-break-inside:avoid}
+}
+</style><div class="wrap">
+<header class="top">
+<div class="eyebrow">알고리즘 설계 · 3블록 보충자료</div>
+<h1>다섯 정렬 따라가기</h1>
+<p class="lede">선택 · 버블 · 삽입 · 병합 · 퀵 정렬을 <b>같은 데이터 하나</b>로 비교해 보겠습니다.</p>
+<div class="block"><h3>여기서 쓰는 숫자</h3><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div></div>
+<div class="legend">
+  <div><span class="key f"></span> 자리가 확정된 값</div>
+  <div><span class="key a"></span> 지금 보고 있는 값</div>
+  <div><span class="key"></span> 아직 확정되지 않은 값</div>
+</div>
+</header>
+<nav class="jump"><ul>
+<li><a href="#bigo">빅 오 읽는 법</a></li>
+<li><a href="#sel">선택 정렬</a></li>
+<li><a href="#bub">버블 정렬</a></li>
+<li><a href="#ins">삽입 정렬</a></li>
+<li><a href="#mer">병합 정렬</a></li>
+<li><a href="#qui">퀵 정렬</a></li>
+<li><a href="#lab">직접 돌려 보기</a></li>
+<li><a href="#fill">추적 표 채우기</a></li>
+<li><a href="#quiz">빅 오 맞히기</a></li>
+</ul></nav>
+<section class="algo" id="bigo"><div class="mark"><span class="num">00</span><h2>빅 오 읽는 법</h2></div><div class="idea"><p>다섯 정렬 절마다 끝에 <b>「몇 번 비교하나」</b> 표를 붙여 두었습니다. 그 표를 읽으려면 빅 오를 알아야 하는데, 알아야 할 것은 생각보다 적습니다.</p></div><h3 style="margin-top:34px">빅 오는 이렇게 만듭니다</h3><p style="margin-top:8px">세 단계입니다. 순서만 지키면 됩니다.</p><div class="range"><div class="ttl">연산 횟수 → 빅 오</div><table><tbody><tr><td>①</td><td>연산 횟수를 세어 n의 식으로 쓴다</td><td>3n² + 50n + 200</td></tr><tr><td>②</td><td><b>최고차항</b>만 남긴다</td><td>3n²</td></tr><tr><td>③</td><td><b>계수</b>를 지우고 O( ) 안에 넣는다</td><td><b>O(n²)</b></td></tr></tbody></table></div><p style="margin-top:16px">몇 개 더 해 보면 손에 익습니다.</p><div class="range"><div class="ttl">연습</div><table><tbody><tr><td>n(n-1)/2</td><td></td><td>먼저 풀면 n²/2 − n/2 입니다. 최고차항 n²/2 → 계수 1/2을 지우면 <b>O(n²)</b></td></tr><tr><td>3n + 5</td><td></td><td>최고차항 3n → 계수 3을 지우면 <b>O(n)</b></td></tr><tr><td>log<sub>2</sub>n + 1</td><td></td><td>최고차항 log<sub>2</sub>n → <b>O(log n)</b> (밑도 지웁니다. 까닭은 아래에)</td></tr><tr><td>2n log<sub>2</sub>n + 4n</td><td></td><td>최고차항 2n log<sub>2</sub>n → <b>O(n log n)</b></td></tr><tr><td>100</td><td></td><td>n이 없습니다. n이 커져도 100 그대로이므로 <b>O(1)</b></td></tr></tbody></table></div><h3 style="margin-top:34px">왜 최고차항만 남기고 계수를 지우나</h3><p style="margin-top:8px"><b>계수부터 봅시다.</b> 연산 횟수가 <code>5n</code>인 알고리즘에서 n을 2배로 하면 <code>10n ÷ 5n = 2</code>, 곧 2배입니다. <code>100n</code>이어도 답은 똑같이 2배입니다. <b>5나 100은 계산에서 약분되어 사라집니다.</b> 무시하는 것이 아니라 답에 나타나지 않는 것입니다.</p><p style="margin-top:14px"><b>낮은 항은</b> n이 커지면 저절로 작아집니다. <code>3n² + 50n + 200</code>에서 n = 2,000이면 3n²가 전체의 <b>99%가 넘습니다.</b> 나머지를 통째로 지워도 오차가 1%도 안 됩니다. 그래서 최고차항만 남깁니다.</p><h3 style="margin-top:34px">그래서 무엇을 말하려는 것인가</h3><p style="margin-top:8px">빅 오는 <b>시간</b>이 아닙니다. <code>O(n²)</code>는 “n의 제곱 초가 걸린다”는 뜻이 아니에요. 컴퓨터마다 속도가 다르니 초로는 말할 수 없습니다. 빅 오가 말하는 것은 <b>늘어나는 모양</b>입니다. 그 모양을 몸으로 느끼는 방법이 하나 있습니다.</p><div class="bigo"><p class="q">입력을 2배로 늘리면<br>일은 몇 배가 되는가?</p><p style="text-align:center; color:var(--muted); font-size:.88rem; margin-top:10px">빅 오의 정의는 아니지만, 빅 오가 무엇을 말하려는 것인지 알기에는 이만한 질문이 없습니다.</p></div><div class="range"><div class="ttl">2배로 늘리면 일은 몇 배가 되나</div><table><tbody><tr><td>O(n)</td><td>2배</td><td>입력이 늘어난 만큼 일도 그대로 늘어납니다.<br><b>버블 정렬 · 삽입 정렬</b> — 이미 정렬된 데이터가 들어왔을 때</td></tr><tr><td>O(n log n)</td><td>2배보다 조금 더</td><td>n배에 아주 조금만 얹힌 정도입니다.<br><b>병합 정렬 · 퀵 정렬</b> — 어떤 데이터가 들어와도</td></tr><tr><td>O(n²)</td><td>4배</td><td>입력이 10배가 되면 일은 100배가 됩니다.<br><b>선택 정렬</b> — 어떤 데이터가 들어와도<br><b>버블 정렬 · 삽입 정렬</b> — 거꾸로 정렬된 데이터가 들어왔을 때</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">이 방법은 <code>n</code>, <code>n²</code>처럼 <b>다항식일 때만 깔끔하게 맞습니다.</b> <code>O(log n)</code>은 2배로 해도 몇 배가 되는 것이 아니라 <b>1만큼 늘어나고</b>, <code>O(n log n)</code>도 정확한 배수가 아니라 n에 따라 조금씩 달라집니다. 그래서 이것은 <b>감을 잡는 방법</b>이지 정의가 아닙니다. 정의는 위의 세 단계입니다.</p></div><h3 style="margin-top:34px">반복문을 보고 빅 오 읽기</h3><p style="margin-top:8px">이제 코드에서 ①단계의 식을 세우는 방법입니다. <b>반복문이 몇 겹인지</b>만 보면 됩니다.</p><div class="range pat"><div class="ttl">반복문을 보고 빅 오 읽기</div><table><tbody><tr><td>a = A[0]
+b = A[1]</td><td>O(1)</td><td>반복문이 없습니다. 리스트가 아무리 길어도 하는 일이 그대로입니다.</td></tr><tr><td>for i in range(n):
+    ...</td><td>O(n)</td><td>n번 돕니다. 한 겹입니다.</td></tr><tr><td>for i in range(n):
+    for j in range(n):
+        ...</td><td>O(n²)</td><td>안쪽이 바깥의 <b>안에</b> 있으므로 n × n = n²번입니다.</td></tr><tr><td>for i in range(n):
+    for j in range(i):
+        ...</td><td>O(n²)</td><td>삼각형 모양이라 n(n-1)/2번, 곧 <b>절반</b>입니다. 그런데 1/2은 상수라 지우므로 <b>여전히 O(n²)</b>입니다.</td></tr><tr><td>for i in range(n):
+    ...
+for j in range(n):
+    ...</td><td>O(n)</td><td>나란히 있으므로 n + n = 2n번입니다. 2는 상수라 지웁니다. <b>중첩이 아니면 곱해지지 않습니다.</b></td></tr><tr><td>i = n
+while i &gt; 1:
+    i = i // 2</td><td>O(log n)</td><td>반으로 나눌 때마다 한 번씩이므로 “반으로 몇 번 나누면 1이 되나” = log<sub>2</sub>n번입니다.</td></tr><tr><td>for i in range(100):
+    ...</td><td>O(1)</td><td>100은 n과 상관없는 <b>고정된 수</b>입니다. n이 커져도 100번 그대로이므로 상수입니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">규칙은 두 개뿐입니다. <b>안에 들어가면 곱하기</b>, <b>나란히 있으면 더하기</b>입니다. 더한 다음에는 <b>최고차항</b>만 남깁니다.</p></div><div class="range"><div class="ttl">이 자료의 다섯 정렬은 어디에 해당하나</div><table><tbody><tr><td>선택 정렬</td><td>O(n²)</td><td>바깥 <code>for i</code> 안에 <code>for j</code>가 들어 있습니다. 두 겹이므로 n × n입니다.</td></tr><tr><td>버블 정렬</td><td>O(n²)</td><td>역시 두 겹입니다. 다만 <code>break</code> 덕분에 이미 정렬된 데이터에서는 한 겹만 돌고 끝나 O(n)이 됩니다.</td></tr><tr><td>삽입 정렬</td><td>O(n²)</td><td><code>for</code> 안에 <code>while</code>이 들어 있습니다. 반복문이면 <code>for</code>든 <code>while</code>이든 똑같이 셉니다.</td></tr><tr><td>병합 정렬</td><td>O(n log n)</td><td>반씩 나누므로 단계가 <b>log<sub>2</sub>n개</b>이고, 각 단계에서 n개를 훑습니다.</td></tr><tr><td>퀵 정렬</td><td>O(n log n)</td><td>같은 이유입니다. 다만 나눔이 한쪽으로 쏠리면 단계가 n개가 되어 O(n²)이 됩니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가운데 칸과 오른쪽 칸에서 <b>로그의 밑이 다르게 적혀 있는 것</b>을 눈여겨보십시오. 가운데는 빅 오 <b>기호</b>라 밑을 적지 않고, 오른쪽은 <b>실제로 세는 횟수</b>라 밑이 2입니다. n = 8이면 단계가 정확히 log<sub>2</sub>8 = 3개입니다. 기호에서 왜 밑을 지우는지는 아래 「왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나」에서 설명합니다.</p></div><h3 style="margin-top:34px">여기서 세는 것은 초가 아니라 비교 횟수입니다</h3><p style="margin-top:8px">실제로 걸리는 시간은 <b>(비교 횟수) × (한 번 비교하는 데 걸리는 시간)</b>입니다. 뒤쪽은 컴퓨터마다 다르지만 n이 커져도 변하지 않습니다. 그래서 그 부분을 떼어 내면 앞쪽만 남습니다. <b>시간을 이야기하면서 횟수를 세는 이유가 이것입니다.</b></p><h3 style="margin-top:30px">log n 은 무엇인가</h3><p style="margin-top:8px"><b>“n을 몇 번 반으로 나누면 1이 되는가”</b>입니다. 8 → 4 → 2 → 1 이므로 <b>log<sub>2</sub>8 = 3</b>입니다. 1000은 열 번, 100만은 스무 번이면 1까지 갑니다. n이 1000배 커져도 log는 10만 늘어납니다. 그래서 <b>log가 붙으면 거의 커지지 않습니다.</b></p><h3 style="margin-top:30px">왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나</h3><p style="margin-top:8px">반으로 나누니까 밑은 분명히 2입니다. 그런데 <code>O(n log n)</code>이라고 쓸 때는 밑을 적지 않습니다.</p><p style="margin-top:12px">밑이 다른 로그끼리는 <b>항상 일정한 배수만큼</b> 차이 납니다. <b>log<sub>2</sub>n</b>은 log<sub>10</sub>n의 <b>언제나 3.32배</b>입니다. n이 8이든 100만이든 그 배수는 3.32로 변하지 않습니다.</p><div class="range"><div class="ttl">밑만 다른 로그의 값</div><table><tbody><tr><td>n = 8</td><td>log<sub>2</sub>n = 3</td><td>log<sub>10</sub>n = 0.90 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000</td><td>log<sub>2</sub>n = 10</td><td>log<sub>10</sub>n = 3 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000,000</td><td>log<sub>2</sub>n = 20</td><td>log<sub>10</sub>n = 6 &nbsp;→&nbsp; <b>3.32배</b></td></tr></tbody></table></div><p style="margin-top:14px">3.32는 <b>n이 커져도 변하지 않는 상수</b>입니다. 그리고 ③단계에서 상수는 지우기로 했지요. 그래서 밑도 함께 지웁니다. 밑이 2이든 10이든 <b>같은 O(log n)</b>입니다.</p><p style="margin-top:12px">다만 <b>실제로 횟수를 셀 때는 밑이 2입니다.</b> 반으로 나누니까요. 그래서 이 자료의 표에서는 <b>log<sub>2</sub>8 = 3</b>처럼 밑을 적었고, 빅 오 기호로 쓸 때만 <code>O(n log n)</code>으로 적습니다.</p><div class="callout"><p>병합 정렬과 퀵 정렬이 빠른 이유는 하나입니다. <b>한 단계에서 n개를 훑는 것은 다른 정렬과 같은데, 그 단계가 n번이 아니라 log<sub>2</sub>n번</b>이기 때문입니다. n = 100만이면 100만 번과 스무 번의 차이입니다.</p></div></section>
+<section class="algo" id="sel">
+<div class="mark"><span class="num">01</span><h2>선택 정렬</h2></div>
+<div class="idea"><p><b>남은 부분에서 가장 작은 값을 찾아 맨 앞의 값과 교환합니다.</b> 그다음에는 한 칸 오른쪽으로 옮겨 가며 같은 일을 되풀이합니다. 왼쪽은 자리가 확정된 부분이고, 오른쪽은 아직 확정되지 않은 부분입니다.</p></div>
+<div class="pseudo"><div class="ttl">의사 코드 — 선택 정렬</div><ol><li>ALGORITHM SelectionSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 0 TO n-2 DO</li><li>        min ← i</li><li>        FOR j ← i+1 TO n-1 DO</li><li>            IF A[j] &lt; A[min] THEN</li><li>                min ← j</li><li>        A[i] 와 A[min] 을 교환한다</li><li>    RETURN A</li></ol></div>
+<div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def selection_sort(A):</li><li>    n = len(A)</li><li>    for i in range(n - 1):</li><li>        m = i</li><li>        for j in range(i + 1, n):</li><li>            if A[j] &lt; A[m]:</li><li>                m = j</li><li>        A[i], A[m] = A[m], A[i]</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px">의사 코드와 <b>줄이 하나씩 그대로 맞습니다.</b> <code>FOR i ← 0 TO n-2</code> 가 <code>for i in range(n - 1)</code> 이 되는 것만 눈여겨보십시오. <code>range(n-1)</code> 은 0부터 n-2까지이므로 같은 말입니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def selection_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다. 여기서는 8입니다.</td></tr><tr><td>3</td><td>for i in range(n - 1):</td><td>i가 0부터 n-2까지 바뀝니다. <code>range(7)</code>은 0에서 6까지이고 <b>7은 포함하지 않습니다.</b></td></tr><tr><td>4</td><td>m = i</td><td>가장 작은 값이 있는 <b>인덱스</b>를 m에 담습니다. 값이 아니라 <b>자리</b>를 담는 것입니다.</td></tr><tr><td>5</td><td>for j in range(i + 1, n):</td><td>j가 i 다음 자리부터 마지막 자리까지 바뀝니다. A[i]는 이미 후보로 잡아 두었으니 건너뜁니다.</td></tr><tr><td>6</td><td>if A[j] &lt; A[m]:</td><td>지금 보는 값이 지금까지 가장 작던 값보다 작으면.</td></tr><tr><td>7</td><td>m = j</td><td>가장 작은 값의 <b>자리</b>를 j로 바꿉니다. 값은 아직 하나도 움직이지 않았습니다.</td></tr><tr><td>8</td><td>A[i], A[m] = A[m], A[i]</td><td>두 자리의 값을 한 번에 교환합니다. 파이썬은 <b>오른쪽을 먼저 다 읽은 뒤</b> 왼쪽에 넣으므로 임시 변수가 필요 없습니다.</td></tr><tr><td>9</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
+<div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 0 TO n-2</td><td>i 는 <b>지금 채울 자리</b>입니다. 앞에서부터 자리를 하나씩 확정해 나가는데, n-1개를 확정하면 <b>남은 하나는 저절로 제자리</b>입니다. 그래서 마지막 자리는 하지 않아도 됩니다.</td></tr><tr><td>안쪽 FOR</td><td>j ← i+1 TO n-1</td><td>j 는 <b>비교할 값의 자리</b>입니다. i 번은 이미 후보로 잡아 두었으니(min ← i) 그 다음 자리부터 끝까지 훑습니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">바깥 반복은 <b>몇 번 되풀이할 것인가</b>를, 안쪽 반복은 <b>인덱스가 어디까지 갈 수 있는가</b>를 정하는 일입니다. 세 정렬을 다 본 뒤 삽입 정렬 끝에서 한 번에 정리합니다.</p></div>
+<div class="block"><h3>단계별로</h3><div class="scroll">
+<div class="step"><div class="lbl">시작</div><div class="code"><span><b>2행</b><em>n ← A의 길이</em></span></div><div class="body"><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">아직 자리가 확정된 값이 없습니다.</p></div></div>
+<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>1</b>. 1번 자리의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">가장 작은 값 <b>2</b>가 이미 2번 자리에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
+<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell">5</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>3</b>. 3번 자리의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">5</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>4</b>. 4번 자리의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed active">5</span><span class="cell">9</span><span class="cell">8</span><span class="cell">7</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>5</b>. 5번 자리의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell">8</span><span class="cell">9</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>7</b>. 6번 자리의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell">9</span></div><p class="note">가장 작은 값 <b>8</b>이 이미 7번 자리에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
+</div></div>
+<div class="block"><h3>추적 표</h3><div class="scroll"><table>
+<thead><tr><th>회차</th><th>남은 부분에서 가장 작은 값</th><th>교환한 자리</th><th>교환한 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">1</td><td class="n">1번 ↔ 4번</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">7</td></tr>
+<tr><td class="n">2</td><td class="n">2</td><td class="n">2번 ↔ 자기 자신</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">6</td></tr>
+<tr><td class="n">3</td><td class="n">3</td><td class="n">3번 ↔ 6번</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">5</td></tr>
+<tr><td class="n">4</td><td class="n">4</td><td class="n">4번 ↔ 8번</td><td class="n">1 2 3 4 7 9 8 5</td><td class="n">4</td></tr>
+<tr><td class="n">5</td><td class="n">5</td><td class="n">5번 ↔ 8번</td><td class="n">1 2 3 4 5 9 8 7</td><td class="n">3</td></tr>
+<tr><td class="n">6</td><td class="n">7</td><td class="n">6번 ↔ 8번</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">2</td></tr>
+<tr><td class="n">7</td><td class="n">8</td><td class="n">7번 ↔ 자기 자신</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">1</td></tr>
+<tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td class="n"><b>28</b></td></tr>
+</tbody></table></div></div>
+<div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>28</td><td>7+6+5+4+3+2+1</td></tr><tr><td>이미 정렬된 데이터</td><td>28</td><td>똑같습니다</td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>역시 똑같습니다</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">어떤 데이터가 들어와도 <b>28번으로 같습니다.</b> 가장 작은 값을 찾으려면 남은 구간을 끝까지 다 봐야 하기 때문입니다. n개일 때는 (n-1)+(n-2)+⋯+1 = <b>n(n-1)/2</b>이고, n이 커지면 n²/2가 되므로 <b>O(n²)</b>입니다.</p></div><div class="callout">
+<p>여덟 개인데 일곱 번이면 끝납니다. 일곱 자리가 정해지면 남은 하나는 저절로 제자리이기 때문입니다.</p>
+<p>2회차와 7회차처럼 <b>이미 제자리인 경우에도 비교는 그대로 다 합니다.</b> 남은 것을 전부 보기 전에는
+제자리인지 알 수 없으니까요. 어떤 입력에도 선택 정렬의 비교 횟수가 같은 이유입니다.</p>
+</div>
+</section>
+<section class="algo" id="bub">
+<div class="mark"><span class="num">02</span><h2>버블 정렬</h2></div>
+<div class="idea"><p><b>옆자리끼리 비교해 순서가 뒤바뀌어 있으면 교환합니다.</b> 한 회차가 끝나면 가장 큰 값이 맨 뒤로 밀려납니다. 그래서 다음 반복은 한 칸 덜 봐도 됩니다.</p></div>
+<div class="pseudo"><div class="ttl">의사 코드 — 버블 정렬</div><ol><li>ALGORITHM BubbleSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 0 TO n-2 DO</li><li>        swapped ← false</li><li>        FOR j ← 0 TO n-2-i DO</li><li>            IF A[j] &gt; A[j+1] THEN</li><li>                A[j] 와 A[j+1] 을 교환한다</li><li>                swapped ← true</li><li>        IF swapped = false THEN 멈춘다</li><li>    RETURN A</li></ol></div>
+<div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def bubble_sort(A):</li><li>    n = len(A)</li><li>    for i in range(n - 1):</li><li>        swapped = False</li><li>        for j in range(n - 1 - i):</li><li>            if A[j] &gt; A[j + 1]:</li><li>                A[j], A[j + 1] = A[j + 1], A[j]</li><li>                swapped = True</li><li>        if not swapped:</li><li>            break</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px"><code>range(n - 1 - i)</code> 는 0부터 n-2-i 까지입니다. 의사 코드의 <code>0 TO n-2-i</code> 와 같습니다.<br>교환은 <code>A[j], A[j + 1] = A[j + 1], A[j]</code> 한 줄이면 됩니다. 임시 변수가 필요 없습니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def bubble_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다.</td></tr><tr><td>3</td><td>for i in range(n - 1):</td><td>회차를 n-1번 되풀이합니다.</td></tr><tr><td>4</td><td>swapped = False</td><td>이번 회차에 교환이 있었는지 기억할 표시입니다. <b>매 회차가 시작될 때마다</b> False로 되돌립니다.</td></tr><tr><td>5</td><td>for j in range(n - 1 - i):</td><td>j가 0부터 n-2-i까지. <code>-1</code>은 A[j+1]을 함께 보기 때문이고, <code>-i</code>는 오른쪽 i칸이 이미 확정되었기 때문입니다.</td></tr><tr><td>6</td><td>if A[j] &gt; A[j + 1]:</td><td>이웃한 두 값의 순서가 뒤집혀 있으면.</td></tr><tr><td>7</td><td>A[j], A[j + 1] = A[j + 1], A[j]</td><td>두 값을 교환합니다.</td></tr><tr><td>8</td><td>swapped = True</td><td>교환이 일어났음을 표시해 둡니다.</td></tr><tr><td>9</td><td>if not swapped:</td><td>이번 회차에 교환이 <b>한 번도</b> 없었다면.</td></tr><tr><td>10</td><td>break</td><td>이미 정렬이 끝난 것이므로 바깥 반복을 빠져나옵니다.</td></tr><tr><td>11</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
+<div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 0 TO n-2</td><td>한 회차마다 <b>가장 큰 값 하나가 맨 뒤에 확정</b>됩니다. n-1개를 확정하면 남은 하나는 저절로 제자리이므로 n-1회차면 끝납니다.</td></tr><tr><td>안쪽 FOR</td><td>j ← 0 TO n-2-i</td><td>여기가 헷갈리는 곳입니다. 버블 정렬은 <b>A[j] 와 A[j+1] 을 함께</b> 봅니다. j 가 마지막 자리인 n-1 까지 가면 <b>A[n] 을 보게 되어 배열 밖으로 나갑니다.</b> 그래서 한 칸 앞인 n-2 까지만 갑니다. 여기에 더해, 이미 뒤쪽에 확정된 i 칸은 볼 필요가 없으므로 그만큼 더 뺍니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px"><b>n-1 이 아니라 n-2 인 것은 옆자리를 같이 보기 때문입니다.</b> 선택 정렬의 안쪽 범위가 n-1 까지 가는 것과 비교해 보십시오. 거기서는 A[j] 하나만 보니까 끝까지 가도 됩니다.</p></div>
+<div class="block"><h3>단계별로</h3><div class="scroll">
+<div class="step"><div class="lbl">시작</div><div class="code"><span><b>2행</b><em>n ← A의 길이</em></span></div><div class="body"><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div></div></div>
+<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>IF A[j] &gt; A[j+1] THEN 교환</em><i>옆자리끼리 비교해 교환</i></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>교환이 있었으니 계속</i></span></div><div class="body"><div class="row"><span class="cell">2</span><span class="cell">5</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span><span class="cell fixed">9</span></div><p class="note">이번 회차에서 <b>6회 교환했습니다.</b> 맨 뒤 1칸이 확정되었습니다.</p></div></div>
+<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>IF A[j] &gt; A[j+1] THEN 교환</em><i>옆자리끼리 비교해 교환</i></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>교환이 있었으니 계속</i></span></div><div class="body"><div class="row"><span class="cell">2</span><span class="cell">1</span><span class="cell">5</span><span class="cell">3</span><span class="cell">7</span><span class="cell">4</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">이번 회차에서 <b>3회 교환했습니다.</b> 맨 뒤 2칸이 확정되었습니다.</p></div></div>
+<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>IF A[j] &gt; A[j+1] THEN 교환</em><i>옆자리끼리 비교해 교환</i></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>교환이 있었으니 계속</i></span></div><div class="body"><div class="row"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">5</span><span class="cell">4</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">이번 회차에서 <b>3회 교환했습니다.</b> 맨 뒤 3칸이 확정되었습니다.</p></div></div>
+<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>IF A[j] &gt; A[j+1] THEN 교환</em><i>옆자리끼리 비교해 교환</i></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>교환이 있었으니 계속</i></span></div><div class="body"><div class="row"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">이번 회차에서 <b>1회 교환했습니다.</b> 맨 뒤 4칸이 확정되었습니다.</p></div></div>
+<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>한 번도 교환하지 않음</em></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>여기서 멈춘다</i></span></div><div class="body"><div class="row"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">이번 회차 동안 <b>한 번도 교환하지 않았습니다.</b> 이미 다 정렬된 것이므로 여기서 멈춥니다.</p></div></div>
+</div></div>
+<div class="block"><h3>추적 표</h3><div class="scroll"><table>
+<thead><tr><th>회차</th><th>보는 범위</th><th>교환한 횟수</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">1 ~ 7번</td><td class="n">6</td><td class="n">2 5 1 7 3 8 4 9</td><td class="n">7</td></tr>
+<tr><td class="n">2</td><td class="n">1 ~ 6번</td><td class="n">3</td><td class="n">2 1 5 3 7 4 8 9</td><td class="n">6</td></tr>
+<tr><td class="n">3</td><td class="n">1 ~ 5번</td><td class="n">3</td><td class="n">1 2 3 5 4 7 8 9</td><td class="n">5</td></tr>
+<tr><td class="n">4</td><td class="n">1 ~ 4번</td><td class="n">1</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">4</td></tr>
+<tr><td class="n">5</td><td class="n">1 ~ 3번</td><td class="n">0</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">3</td></tr>
+<tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td class="n"><b>25</b></td></tr>
+</tbody></table></div></div>
+<div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>25</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>7</td><td>첫 회차에서 교환이 없어 <code>break</code></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>끝까지 다 돕니다</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">데이터에 따라 크게 달라집니다. 이미 정렬되어 있으면 <b>첫 회차 7번</b>만에 끝나므로 <b>O(n)</b>이고, 거꾸로 정렬되어 있으면 28번, 곧 <b>O(n²)</b>입니다. 이 차이를 만드는 것이 9~10행의 <code>swapped</code>입니다.</p></div><div class="callout">
+<p>다섯 번째 회차에서 멈췄습니다. 네 회차 만에 이미 다 정렬되었고, 다섯 번째 회차에서 <b>한 번도 교환하지 않았다</b>는 것을
+확인하고 그만둔 것입니다.</p>
+<p><b><code>swapped</code> 덕분에</b> 버블 정렬은 이미 정렬된 데이터를 넣으면 첫 회차 만에 끝납니다.
+선택 정렬에는 없는 성질입니다.</p>
+</div>
+</section><section class="algo" id="ins">
+<div class="mark"><span class="num">03</span><h2>삽입 정렬</h2></div>
+<div class="idea"><p><b>값을 하나 뽑아 손에 들고, 왼쪽의 정렬된 구역에 끼워 넣습니다.</b>
+카드를 손에 쥐고 정리하는 것과 같습니다. 앞의 둘과 다른 점이 하나 있습니다 —
+<b>자리를 교환하는 것이 아니라, 큰 값들을 한 칸씩 밀어내고 빈자리에 꽂습니다.</b></p></div>
+<div class="pseudo"><div class="ttl">의사 코드 — 삽입 정렬</div><ol><li>ALGORITHM InsertionSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 1 TO n-1 DO</li><li>        key ← A[i]</li><li>        j ← i - 1</li><li>        WHILE j &gt;= 0 AND A[j] &gt; key DO</li><li>            A[j+1] ← A[j]</li><li>            j ← j - 1</li><li>        A[j+1] ← key</li><li>    RETURN A</li></ol></div>
+<div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def insertion_sort(A):</li><li>    n = len(A)</li><li>    for i in range(1, n):</li><li>        key = A[i]</li><li>        j = i - 1</li><li>        while j &gt;= 0 and A[j] &gt; key:</li><li>            A[j + 1] = A[j]</li><li>            j -= 1</li><li>        A[j + 1] = key</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px"><code>while j >= 0 and A[j] > key:</code> 에서 <b>왼쪽 조건이 먼저 검사됩니다.</b> 그래서 <code>j</code> 가 -1이 되면 <code>A[j]</code> 를 아예 읽지 않고 빠져나옵니다. 순서를 바꿔 적으면 배열을 벗어납니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def insertion_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다.</td></tr><tr><td>3</td><td>for i in range(1, n):</td><td><b>1부터</b> 시작합니다. A[0] 한 칸은 그것만 놓고 보면 이미 정렬된 상태이기 때문입니다.</td></tr><tr><td>4</td><td>key = A[i]</td><td>뽑아 든 값을 따로 담아 둡니다. 7행에서 이 자리가 덮어써지므로 <b>미리 빼 두지 않으면 값을 잃어버립니다.</b></td></tr><tr><td>5</td><td>j = i - 1</td><td>바로 왼쪽 자리부터 봅니다.</td></tr><tr><td>6</td><td>while j &gt;= 0 and A[j] &gt; key:</td><td>조건이 둘입니다. <code>A[j] &gt; key</code>는 <b>언제 멈출지</b>를, <code>j &gt;= 0</code>은 <b>어디까지 갈 수 있는지</b>를 정합니다.</td></tr><tr><td>7</td><td>A[j + 1] = A[j]</td><td>값을 한 칸 오른쪽으로 밉니다. 이때 같은 값이 잠깐 두 번 보이지만, 원래 값은 key에 들어 있으니 잃어버리지 않습니다.</td></tr><tr><td>8</td><td>j -= 1</td><td>한 칸 더 왼쪽을 봅니다.</td></tr><tr><td>9</td><td>A[j + 1] = key</td><td>비워진 자리에 손에 든 값을 내려놓습니다. j가 이미 한 칸 더 갔으므로 빈자리는 그 <b>오른쪽</b>입니다.</td></tr><tr><td>10</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
+<div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 1 TO n-1</td><td><b>0 번부터가 아니라 1 번부터</b> 시작합니다. 맨 앞 한 칸은 그 자체로 정렬된 것으로 보기 때문입니다. 마지막 값까지 모두 끼워 넣어야 하므로 끝은 n-1 입니다.</td></tr><tr><td>안쪽 WHILE</td><td>j &gt;= 0 AND A[j] &gt; key</td><td><b>범위가 아니라 조건입니다.</b> <code>j &gt;= 0</code> 은 왼쪽 끝을 넘어가지 않게 막고, <code>A[j] &gt; key</code> 는 알맞은 자리를 만나면 멈추게 합니다. 앞의 두 정렬과 달리, <b>반복의 횟수가 정해져 있지 않습니다.</b></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가장 작은 값이 들어오면 왼쪽 끝까지 가므로, <code>j &gt;= 0</code> 이 없으면 배열을 벗어나게 됩니다.</p></div>
+<div class="range" style="margin-top:22px; border-left:4px solid var(--active); border-radius:0 10px 10px 0">
+<div class="ttl">정리 — 반복의 범위는 무엇을 보고 정하나</div>
+<table><tbody>
+<tr><td>바깥 반복</td><td>몇 번 되풀이할 것인가</td><td>한 번 되풀이할 때
+<b>값 몇 개의 자리가 확정되는지</b>를 봅니다. 하나씩 확정된다면 n-1 번이면 끝납니다.
+마지막 하나는 저절로 제자리이기 때문입니다.</td></tr>
+<tr><td>안쪽 반복</td><td>인덱스가 어디까지 갈 수 있나</td><td>한 번에
+<b>몇 칸을 읽는지</b>를 봅니다. <code>A[j]</code> 하나만 읽으면 마지막 자리까지 가도 되지만,
+<code>A[j]</code> 와 <code>A[j+1]</code> 을 함께 읽으면 한 칸 앞에서 멈춰야 합니다.
+읽는 자리가 배열 밖으로 나가면 안 되니까요.</td></tr>
+</tbody></table>
+<div style="padding:0 18px 4px"><table><thead>
+<tr><th>한 번에 읽는 칸</th><th>인덱스가 갈 수 있는 끝</th><th>어디서</th></tr></thead><tbody>
+<tr><td class="n"><code>A[j]</code> 하나</td><td class="n">n-1 까지</td><td>선택 정렬 안쪽</td></tr>
+<tr><td class="n"><code>A[j]</code> 와 <code>A[j+1]</code></td><td class="n"><b>n-2 까지</b></td><td>버블 정렬 안쪽</td></tr>
+<tr><td class="n">왼쪽으로 가며 <code>A[j]</code></td><td class="n"><b>0 이상</b></td><td>삽입 정렬 안쪽</td></tr>
+</tbody></table></div>
+<p class="note" style="padding:12px 18px 16px">끝을 한 칸이라도 잘못 잡으면 파이썬은
+<code>IndexError: list index out of range</code> 를 냅니다.
+다만 <b>왼쪽으로 갈 때는 곧바로 걸리지 않습니다.</b>
+<code>A[-1]</code> 은 오류가 아니라 <b>맨 뒤 값</b>을 가리키기 때문입니다.
+엉뚱한 값을 한 번 읽고 나서 한참 뒤에야 터집니다.
+삽입 정렬에 <code>j &gt;= 0</code> 을 꼭 적어야 하는 이유입니다.</p>
+</div>
+<div class="block"><h3>왜 밀어낼 수 있나</h3>
+<p class="note">
+값을 뽑아 손에 들면 <b>그 칸이 비어 있습니다.</b> 그러니 왼쪽 값을 그 칸에 덮어써도 잃는 것이 없습니다.
+교환은 두 값을 동시에 다뤄야 하지만, 밀어내기는 <b>한 번에 한 칸씩</b>만 옮기면 됩니다.
+</p>
+</div>
+<div class="block"><h3>한 회차를 아주 천천히 — 5회차, 손에 든 값은 3</h3><div class="scroll">
+<div class="step"><div class="lbl">시작</div><div class="code"><span><b>3행</b><em>FOR i ← 1 TO n-1 DO</em><i>i 가 여섯 번째로 왔다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell active">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">왼쪽 5칸은 <b>이미 정렬되어 있습니다.</b> 여섯 번째 값 <b>3</b>을 손에 듭니다.</p></div></div>
+<div class="step"><div class="lbl">뽑음</div><div class="code"><span><b>4행</b><em>key ← A[i]</em></span><span><b>5행</b><em>j ← i - 1</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell">·</span><span class="cell">8</span><span class="cell">4</span></div><p class="note"><b>3</b>을 들어 올렸으니 그 칸은 비었습니다. 이제 덮어써도 됩니다.</p></div></div>
+<div class="step"><div class="lbl">밀기 1</div><div class="code"><span><b>6행</b><em>WHILE j &gt;= 0 AND A[j] &gt; key DO</em><i>조건이 참</i></span><span><b>7행</b><em>A[j+1] ← A[j]</em></span><span><b>8행</b><em>j ← j - 1</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed active">·</span><span class="cell active">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note"><b>9</b>가 3보다 크므로 한 칸 오른쪽으로 밉니다.</p></div></div>
+<div class="step"><div class="lbl">밀기 2</div><div class="code"><span><b>6행</b><em>WHILE j &gt;= 0 AND A[j] &gt; key DO</em><i>조건이 참</i></span><span><b>7행</b><em>A[j+1] ← A[j]</em></span><span><b>8행</b><em>j ← j - 1</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">·</span><span class="cell fixed active">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note"><b>7</b>이 3보다 크므로 한 칸 오른쪽으로 밉니다.</p></div></div>
+<div class="step"><div class="lbl">밀기 3</div><div class="code"><span><b>6행</b><em>WHILE j &gt;= 0 AND A[j] &gt; key DO</em><i>조건이 참</i></span><span><b>7행</b><em>A[j+1] ← A[j]</em></span><span><b>8행</b><em>j ← j - 1</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">·</span><span class="cell fixed active">5</span><span class="cell fixed">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note"><b>5</b>가 3보다 크므로 한 칸 오른쪽으로 밉니다.</p></div></div>
+<div class="step"><div class="lbl">꽂기</div><div class="code"><span><b>6행</b><em>WHILE j &gt;= 0 AND A[j] &gt; key DO</em><i>조건이 거짓 — 빠져나온다</i></span><span><b>9행</b><em>A[j+1] ← key</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note"><b>2</b>는 3보다 작으므로 <b>여기서 멈춥니다.</b> 그 뒤 빈칸에 3을 꽂습니다.</p></div></div>
+</div>
+<p class="note">밀어낸 횟수 <b>3번</b>, 비교한 횟수 <b>4번</b>. 밀 때마다 비교가 한 번씩 있었고, 멈출 때 한 번 더 비교했습니다.</p>
+</div>
+<div class="block"><h3>일곱 회차 전체</h3><div class="scroll">
+<div class="step"><div class="lbl">시작</div><div class="code"><span><b>3행</b><em>FOR i ← 1 TO n-1 DO</em><i>i = 1 부터 시작</i></span></div><div class="body"><div class="row"><span class="cell fixed">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">맨 앞 한 칸은 그 자체로 정렬된 것으로 봅니다.</p></div></div>
+<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">2</span><span class="cell fixed">5</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>2</b> · 1칸 밀어냄 · 1번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>9</b> · 밀어낸 값 없음(이미 제자리) · 3번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">9</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>1</b> · 3칸 밀어냄 · 1번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell fixed">9</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>7</b> · 1칸 밀어냄 · 4번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>3</b> · 3칸 밀어냄 · 3번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed active">8</span><span class="cell fixed">9</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>8</b> · 1칸 밀어냄 · 6번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">손에 든 값 <b>4</b> · 4칸 밀어냄 · 4번 자리에 꽂음</p></div></div>
+</div></div>
+<div class="block"><h3>추적 표</h3><div class="scroll"><table>
+<thead><tr><th>회차</th><th>손에 든 값</th><th>정렬된 구역</th><th>밀어낸 칸</th><th>꽂은 자리</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">2</td><td class="n">5</td><td class="n">1</td><td class="n">1번</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
+<tr><td class="n">2</td><td class="n">9</td><td class="n">2 5</td><td class="n">0</td><td class="n">3번</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
+<tr><td class="n">3</td><td class="n">1</td><td class="n">2 5 9</td><td class="n">3</td><td class="n">1번</td><td class="n">1 2 5 9 7 3 8 4</td><td class="n">3</td></tr>
+<tr><td class="n">4</td><td class="n">7</td><td class="n">1 2 5 9</td><td class="n">1</td><td class="n">4번</td><td class="n">1 2 5 7 9 3 8 4</td><td class="n">2</td></tr>
+<tr><td class="n">5</td><td class="n">3</td><td class="n">1 2 5 7 9</td><td class="n">3</td><td class="n">3번</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">4</td></tr>
+<tr><td class="n">6</td><td class="n">8</td><td class="n">1 2 3 5 7 9</td><td class="n">1</td><td class="n">6번</td><td class="n">1 2 3 5 7 8 9 4</td><td class="n">2</td></tr>
+<tr><td class="n">7</td><td class="n">4</td><td class="n">1 2 3 5 7 8 9</td><td class="n">4</td><td class="n">4번</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">5</td></tr>
+<tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td></td><td></td><td class="n"><b>18</b></td></tr>
+</tbody></table></div></div>
+<div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>18</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>7</td><td>회차마다 한 번만 비교하고 멈춤</td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>회차마다 끝까지 밀어야 함</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">버블 정렬과 마찬가지로 최선이 <b>O(n)</b>, 최악이 <b>O(n²)</b>입니다. 다만 이 데이터에서 18번으로 버블 정렬의 25번보다 적습니다. <b>자리를 찾으면 바로 멈추기</b> 때문입니다.</p></div><div class="callout">
+<p>2회차를 보십시오. 손에 든 <b>9</b>가 왼쪽 끝값보다 크므로 <b>한 번 비교하고 바로 끝납니다.</b>
+밀어낼 것이 하나도 없습니다.</p>
+<p>왼쪽이 이미 정렬되어 있으니 <b>뒤에서부터 보다가 한 번만 "얘는 작네" 하면 그 앞은 볼 필요가 없습니다.</b>
+이미 정렬된 데이터를 넣으면 매 회차가 비교 한 번으로 끝나는 이유입니다. 그래서 최선이 O(n)입니다.</p>
+</div>
+</section><section class="algo" id="mer">
+<div class="mark"><span class="num">04</span><h2>병합 정렬</h2></div>
+<div class="idea"><p><b>반으로 나누고, 또 반으로 나눠 하나짜리가 될 때까지 갑니다.</b>
+하나짜리는 그 자체로 정렬된 것입니다. 거기서부터 <b>둘씩 짝지어 합치며</b> 올라옵니다.
+나눌 때는 아무 생각 없이 반으로 자르고, <b>일은 합칠 때 합니다.</b></p></div>
+<div class="pseudo"><div class="ttl">의사 코드 — 병합 정렬</div><ol><li>ALGORITHM MergeSort(A[0..n-1])</li><li>    IF A의 길이 &lt;= 1 THEN RETURN A</li><li>    mid   ← A의 길이 / 2</li><li>    left  ← MergeSort( 앞의 반 )</li><li>    right ← MergeSort( 뒤의 반 )</li><li>    RETURN Merge(left, right)</li><li></li><li>ALGORITHM Merge(L, R)</li><li>    out ← 빈 목록</li><li>    WHILE L 과 R 둘 다 남아 있는 동안 DO</li><li>        IF L의 맨 앞 &lt;= R의 맨 앞 THEN</li><li>            L의 맨 앞을 꺼내 out 에 붙인다</li><li>        ELSE</li><li>            R의 맨 앞을 꺼내 out 에 붙인다</li><li>    남은 것을 그대로 out 뒤에 붙인다</li><li>    RETURN out</li></ol></div>
+<div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def merge_sort(A):</li><li>    if len(A) &lt;= 1:</li><li>        return A</li><li>    mid = len(A) // 2</li><li>    left  = merge_sort(A[:mid])</li><li>    right = merge_sort(A[mid:])</li><li>    return merge(left, right)</li><li></li><li>def merge(L, R):</li><li>    out = []</li><li>    i = j = 0</li><li>    while i &lt; len(L) and j &lt; len(R):</li><li>        if L[i] &lt;= R[j]:</li><li>            out.append(L[i]); i += 1</li><li>        else:</li><li>            out.append(R[j]); j += 1</li><li>    out += L[i:]</li><li>    out += R[j:]</li><li>    return out</li></ol><p class="note" style="padding:0 18px 16px"><code>A[:mid]</code> 와 <code>A[mid:]</code> 가 앞뒤 반쪽입니다. <b>새 리스트를 만들어</b> 넘깁니다.<br>마지막 두 줄 <code>out += L[i:]</code> 는 한쪽이 비었을 때 <b>남은 것을 비교 없이 그대로 붙이는</b> 부분입니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def merge_sort(A):</td><td>나누는 쪽 함수입니다.</td></tr><tr><td>2</td><td>if len(A) &lt;= 1:</td><td>길이가 1 이하이면 더 나눌 것이 없습니다.</td></tr><tr><td>3</td><td>return A</td><td>그대로 돌려줍니다. <b>이 두 줄이 없으면 나누기가 끝나지 않습니다.</b></td></tr><tr><td>4</td><td>mid = len(A) // 2</td><td>가운데 자리를 구합니다. <code>//</code>는 몫만 남기는 나눗셈입니다.</td></tr><tr><td>5</td><td>left  = merge_sort(A[:mid])</td><td>앞 절반을 잘라 <b>같은 함수에 다시 넣습니다.</b> <code>A[:mid]</code>는 0번부터 mid-1번까지입니다.</td></tr><tr><td>6</td><td>right = merge_sort(A[mid:])</td><td>뒤 절반도 같은 방법으로 처리합니다.</td></tr><tr><td>7</td><td>return merge(left, right)</td><td>정렬된 두 조각을 합칩니다. <b>나누는 쪽에는 크기를 비교하는 줄이 하나도 없습니다.</b></td></tr><tr><td>9</td><td>def merge(L, R):</td><td>합치는 쪽 함수입니다. 이미 정렬된 두 리스트를 받습니다.</td></tr><tr><td>10</td><td>out = []</td><td>결과를 담을 빈 리스트를 <b>새로</b> 만듭니다. 병합 정렬이 메모리를 더 쓰는 이유입니다.</td></tr><tr><td>11</td><td>i = j = 0</td><td>두 리스트를 각각 어디까지 봤는지 기억하는 인덱스입니다.</td></tr><tr><td>12</td><td>while i &lt; len(L) and j &lt; len(R):</td><td><b>둘 다 남아 있을 때만</b> 짝지어 비교할 수 있습니다. 하나라도 바닥나면 반복을 멈춥니다.</td></tr><tr><td>13</td><td>if L[i] &lt;= R[j]:</td><td>두 값이 같을 때 <b>왼쪽 것을 먼저</b> 붙여야 원래 순서가 유지됩니다.</td></tr><tr><td>14</td><td>out.append(L[i]); i += 1</td><td>왼쪽 값을 결과에 붙이고 한 칸 넘어갑니다.</td></tr><tr><td>15</td><td>else:</td><td>오른쪽이 더 작으면.</td></tr><tr><td>16</td><td>out.append(R[j]); j += 1</td><td>오른쪽 값을 붙이고 한 칸 넘어갑니다.</td></tr><tr><td>17</td><td>out += L[i:]</td><td>왼쪽에 남은 것을 통째로 붙입니다. 이미 정렬되어 있으므로 비교가 필요 없습니다.</td></tr><tr><td>18</td><td>out += R[j:]</td><td>오른쪽도 마찬가지입니다. <b>둘 중 하나는 이미 비어 있습니다.</b></td></tr><tr><td>19</td><td>return out</td><td>합쳐진 리스트를 돌려줍니다.</td></tr></tbody></table></div>
+<div class="range"><div class="ttl">멈추는 조건과 나누는 자리</div><table><tbody><tr><td>멈추는 조건</td><td>A의 길이 &lt;= 1</td><td>하나짜리는 <b>그 자체로 정렬된 것</b>이므로 더 나눌 것이 없습니다. 여기서 되돌아 올라갑니다.</td></tr><tr><td>나누는 자리</td><td>mid ← 길이 / 2</td><td>앞의 반은 <b>0 번부터 mid-1 번까지</b>, 뒤의 반은 <b>mid 번부터 n-1 번까지</b>입니다. 길이가 홀수면 뒤쪽이 하나 더 많아집니다 (5개 → 2개 + 3개). 한쪽이 하나 많아도 상관없습니다.</td></tr></tbody></table></div>
+<div class="block"><h3>내려가며 나누기</h3><div class="scroll">
+<div class="step"><div class="lbl">0단</div><div class="code"><span><b>3행</b><em>mid ← A의 길이 / 2</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span><span class="cell sm">2</span><span class="cell sm">9</span><span class="cell sm">1</span><span class="cell sm">7</span><span class="cell sm">3</span><span class="cell sm">8</span><span class="cell sm">4</span></span></div><p class="note">통째로 하나</p></div></div>
+<div class="step"><div class="lbl">1단</div><div class="code"><span><b>4~5행</b><em>left ← MergeSort( 앞의 반 )</em><i>right ← MergeSort( 뒤의 반 )</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span><span class="cell sm">2</span><span class="cell sm">9</span><span class="cell sm">1</span></span><span class="grp"><span class="cell sm">7</span><span class="cell sm">3</span><span class="cell sm">8</span><span class="cell sm">4</span></span></div><p class="note">조각 2개</p></div></div>
+<div class="step"><div class="lbl">2단</div><div class="code"><span><b>4~5행</b><em>left ← MergeSort( 앞의 반 )</em><i>right ← MergeSort( 뒤의 반 )</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span><span class="cell sm">2</span></span><span class="grp"><span class="cell sm">9</span><span class="cell sm">1</span></span><span class="grp"><span class="cell sm">7</span><span class="cell sm">3</span></span><span class="grp"><span class="cell sm">8</span><span class="cell sm">4</span></span></div><p class="note">조각 4개</p></div></div>
+<div class="step"><div class="lbl">3단</div><div class="code"><span><b>2행</b><em>IF A의 길이 &lt;= 1 THEN RETURN A</em><i>더 나눌 것이 없다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span></span><span class="grp"><span class="cell sm">2</span></span><span class="grp"><span class="cell sm">9</span></span><span class="grp"><span class="cell sm">1</span></span><span class="grp"><span class="cell sm">7</span></span><span class="grp"><span class="cell sm">3</span></span><span class="grp"><span class="cell sm">8</span></span><span class="grp"><span class="cell sm">4</span></span></div><p class="note">조각 8개</p></div></div>
+</div></div>
+<div class="block"><h3>올라오며 합치기</h3><div class="scroll">
+<div class="step"><div class="lbl">0단</div><div class="code"><span><b>2행</b><em>IF A의 길이 &lt;= 1 THEN RETURN A</em><i>하나짜리는 그대로</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span></span><span class="grp"><span class="cell sm">2</span></span><span class="grp"><span class="cell sm">9</span></span><span class="grp"><span class="cell sm">1</span></span><span class="grp"><span class="cell sm">7</span></span><span class="grp"><span class="cell sm">3</span></span><span class="grp"><span class="cell sm">8</span></span><span class="grp"><span class="cell sm">4</span></span></div><p class="note">하나짜리는 그 자체로 정렬된 것입니다</p></div></div>
+<div class="step"><div class="lbl">1단</div><div class="code"><span><b>6행</b><em>RETURN Merge(left, right)</em></span><span><b>10~14행</b><em>IF L의 맨 앞 &lt;= R의 맨 앞 THEN …</em><i>양쪽 맨 앞을 비교해 꺼낸다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">2</span><span class="cell sm">5</span></span><span class="grp"><span class="cell sm">1</span><span class="cell sm">9</span></span><span class="grp"><span class="cell sm">3</span><span class="cell sm">7</span></span><span class="grp"><span class="cell sm">4</span><span class="cell sm">8</span></span></div><p class="note">조각 4개. 각 조각 안은 정렬되어 있습니다.</p></div></div>
+<div class="step"><div class="lbl">2단</div><div class="code"><span><b>6행</b><em>RETURN Merge(left, right)</em></span><span><b>10~14행</b><em>IF L의 맨 앞 &lt;= R의 맨 앞 THEN …</em><i>양쪽 맨 앞을 비교해 꺼낸다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">5</span><span class="cell sm">9</span></span><span class="grp"><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">7</span><span class="cell sm">8</span></span></div><p class="note">조각 2개. 각 조각 안은 정렬되어 있습니다.</p></div></div>
+<div class="step"><div class="lbl">3단</div><div class="code"><span><b>6행</b><em>RETURN Merge(left, right)</em></span><span><b>10~14행</b><em>IF L의 맨 앞 &lt;= R의 맨 앞 THEN …</em><i>양쪽 맨 앞을 비교해 꺼낸다</i></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span><span class="cell sm">7</span><span class="cell sm">8</span><span class="cell sm">9</span></span></div><p class="note">끝났습니다.</p></div></div>
+</div></div>
+<div class="block"><h3>합치기 한 번을 자세히 — <span class="tag"></span>1 3 8 9 와 3 4 7 8</h3>
+<p class="note">
+양쪽이 <b>이미 정렬되어 있으니</b>, 다음에 놓을 값은 <b>양쪽 맨 앞 두 개 중 하나</b>일 수밖에 없습니다.
+전체를 뒤질 필요가 없습니다. 이것이 병합 정렬의 핵심입니다.
+</p><div class="scroll"><table>
+<thead><tr><th>차례</th><th>왼쪽에 남은 것</th><th>오른쪽에 남은 것</th><th>비교</th><th>꺼낸 값</th><th>지금까지 만든 것</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">1 3 8 9</td><td class="n">3 4 7 8</td><td class="n">1 와 3</td><td class="n">1</td><td class="n">—</td></tr>
+<tr><td class="n">2</td><td class="n">3 8 9</td><td class="n">3 4 7 8</td><td class="n">3 와 3</td><td class="n">3</td><td class="n">1</td></tr>
+<tr><td class="n">3</td><td class="n">8 9</td><td class="n">3 4 7 8</td><td class="n">8 와 3</td><td class="n">3</td><td class="n">1 3</td></tr>
+<tr><td class="n">4</td><td class="n">8 9</td><td class="n">4 7 8</td><td class="n">8 와 4</td><td class="n">4</td><td class="n">1 3 3</td></tr>
+<tr><td class="n">5</td><td class="n">8 9</td><td class="n">7 8</td><td class="n">8 와 7</td><td class="n">7</td><td class="n">1 3 3 4</td></tr>
+<tr><td class="n">6</td><td class="n">8 9</td><td class="n">8</td><td class="n">8 와 8</td><td class="n">8</td><td class="n">1 3 3 4 7</td></tr>
+<tr><td class="n">7</td><td class="n">9</td><td class="n">8</td><td class="n">9 와 8</td><td class="n">8</td><td class="n">1 3 3 4 7 8</td></tr>
+<tr><td class="n">8</td><td class="n">9</td><td class="n">—</td><td class="n"><span style="color:var(--muted)">한쪽이 비었음</span></td><td class="n">9 <span style="color:var(--muted)">(비교 없이)</span></td><td class="n">1 3 3 4 7 8 8</td></tr>
+<tr><td class="n"><b>끝</b></td><td></td><td></td><td></td><td></td><td class="n"><b>1 3 3 4 7 8 8 9</b></td></tr>
+</tbody></table></div></div>
+<div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>17</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>12</td><td></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>12</td><td></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">데이터가 무엇이든 12~17번 사이입니다. 나눔의 깊이가 log<sub>2</sub>8 = <b>3단계</b>이고 각 단계에서 많아야 8번 비교하므로 8 × 3 = 24번이 상한입니다. 그래서 <b>O(n log n)</b>이고, <b>입력에 거의 흔들리지 않습니다.</b></p></div><div class="callout">
+<p>여덟 개를 하나짜리까지 나누는 데 <b>세 번</b> 나눴습니다. 8 → 4 → 2 → 1 이지요.
+n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>n</b> 입니다.</p>
+<p>그리고 <b>한 단에서 자리를 잡는 값은 조각이 몇 개로 쪼개져 있든 전부 합쳐 n개</b>입니다.
+그래서 (단 수) × (단마다 n) = <b>n × log<sub>2</sub>n</b> 이 됩니다.</p>
+</div>
+</section>
+<section class="algo" id="qui">
+<div class="mark"><span class="num">05</span><h2>퀵 정렬</h2></div>
+<div class="idea"><p><b>기준 하나를 골라 작은 것과 큰 것으로 나눕니다.</b>
+그리고 양쪽을 각각 같은 방법으로 정렬한 뒤 <b>그냥 이어 붙입니다.</b>
+병합과 정반대입니다 — 퀵은 <b>나눌 때 일하고, 합칠 때는 붙이기만</b> 합니다.</p></div>
+<div class="pseudo"><div class="ttl">의사 코드 — 퀵 정렬</div><ol><li>ALGORITHM QuickSort(A[0..n-1])</li><li>    IF A의 길이 &lt;= 1 THEN RETURN A</li><li>    pivot ← A의 가운데 값</li><li>    less  ← pivot 보다 작은 값들</li><li>    same  ← pivot 과 같은 값들</li><li>    more  ← pivot 보다 큰 값들</li><li>    RETURN QuickSort(less) + same + QuickSort(more)</li></ol></div>
+<div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def quick_sort(A):</li><li>    if len(A) &lt;= 1:</li><li>        return A</li><li>    pivot = A[len(A) // 2]</li><li>    less, same, more = [], [], []</li><li>    for v in A:</li><li>        if v &lt; pivot:</li><li>            less.append(v)</li><li>        elif v &gt; pivot:</li><li>            more.append(v)</li><li>        else:</li><li>            same.append(v)</li><li>    return quick_sort(less) + same + quick_sort(more)</li></ol><p class="note" style="padding:0 18px 16px">나누는 일은 <b>빈 리스트 셋을 만들고 한 번 훑으며 담는 것</b>이 전부입니다. <code>for v in A</code> 는 자리가 아니라 값을 꺼내 주므로 인덱스가 나오지 않습니다.<br><code>5 2 9 1 7 3 8 4</code> 를 넣으면 기준은 7, <code>less = [5, 2, 1, 3, 4]</code> · <code>same = [7]</code> · <code>more = [9, 8]</code> 이 됩니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def quick_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>if len(A) &lt;= 1:</td><td>길이가 1 이하이면.</td></tr><tr><td>3</td><td>return A</td><td>그대로 돌려줍니다. <b>멈춤 조건</b>입니다.</td></tr><tr><td>4</td><td>pivot = A[len(A) // 2]</td><td>가운데 <b>자리의 값</b>을 기준으로 삼습니다. 인덱스를 쓰는 곳은 이 한 줄뿐입니다.</td></tr><tr><td>5</td><td>less, same, more = [], [], []</td><td>빈 리스트 세 개를 한 줄에 만듭니다.</td></tr><tr><td>6</td><td>for v in A:</td><td>리스트의 <b>값</b>을 하나씩 꺼내 봅니다. 인덱스가 나오지 않는 것을 눈여겨보십시오.</td></tr><tr><td>7</td><td>if v &lt; pivot:</td><td>기준보다 작으면.</td></tr><tr><td>8</td><td>less.append(v)</td><td>왼쪽 무더기에 넣습니다.</td></tr><tr><td>9</td><td>elif v &gt; pivot:</td><td>기준보다 크면.</td></tr><tr><td>10</td><td>more.append(v)</td><td>오른쪽 무더기에 넣습니다.</td></tr><tr><td>11</td><td>else:</td><td>기준과 같으면.</td></tr><tr><td>12</td><td>same.append(v)</td><td>가운데 무더기에 넣습니다. <b>이 무더기가 없으면</b> 같은 값이 여럿일 때 무더기가 줄지 않아 멈추지 않을 수 있습니다.</td></tr><tr><td>13</td><td>return quick_sort(less) + same + quick_sort(more)</td><td>세 무더기를 순서대로 이어 붙입니다. <code>+</code>는 리스트를 잇는 연산입니다.</td></tr></tbody></table></div>
+<div class="range"><div class="ttl">멈추는 조건과 다시 부르는 곳</div><table><tbody><tr><td>멈추는 조건</td><td>A의 길이 &lt;= 1</td><td>하나짜리는 그 자체로 정렬된 것입니다.</td></tr><tr><td>다시 부르는 곳</td><td>less 와 more 만</td><td><b>same 은 다시 부르지 않습니다.</b> 기준과 같은 값들은 이미 제자리를 찾았기 때문입니다. 그래서 부를 때마다 <b>적어도 기준 하나는 빠져</b> 덩이가 반드시 작아집니다. 이것이 언젠가 멈춘다는 것을 보장합니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">퀵 정렬에는 <b>반복의 범위를 정하는 일이 없습니다.</b> 자리를 하나씩 짚어 가며 도는 것이 아니라, 값을 하나씩 꺼내 보며 세 덩이에 담기 때문입니다. 그래서 배열 밖으로 나갈 걱정도 없습니다.<br><br>자리를 쓰는 곳은 <b>기준을 고를 때</b> 한 곳뿐입니다 — <code>A의 가운데</code>. 가운데는 언제나 있는 자리라 이것도 넘칠 일이 없습니다.<br><br>병합 정렬과 다른 점은 여기입니다. <b>병합은 <b>자리로</b> 나누고, 퀵은 <b>값으로</b> 나눕니다.</b> 기준을 고를 때 자리를 쓰긴 하지만, 어느 쪽으로 갈지는 값이 정합니다.</p></div>
+<div class="block"><h3>병합과 무엇이 다른가</h3><div class="scroll"><table>
+<thead><tr><th></th><th>나눌 때</th><th>합칠 때</th><th>한 번 나눈 뒤 기준 값은</th></tr></thead><tbody>
+<tr><td><b>병합</b></td><td>아무 생각 없이 반으로</td><td class="n">여기서 일함 — 양쪽 맨 앞 비교</td><td>—</td></tr>
+<tr><td><b>퀵</b></td><td class="n">여기서 일함 — 기준으로 나눔</td><td>그냥 이어 붙임</td><td class="n">영영 제자리. 다시 안 건드림</td></tr>
+</tbody></table></div></div>
+<div class="block"><h3>나누는 과정</h3><div class="scroll"><table>
+<thead><tr><th>단계</th><th>어디</th><th>나누는 배열</th><th>기준</th><th>작은 것</th><th>기준과 같은 값</th><th>큰 것</th></tr></thead><tbody>
+<tr><td class="n">0</td><td>전체</td><td class="n">5 2 9 1 7 3 8 4</td><td class="n"><b style="color:var(--active)">7</b></td><td class="n">5 2 1 3 4</td><td class="n">7</td><td class="n">9 8</td></tr>
+<tr><td class="n">1</td><td>전체 → 작은 쪽</td><td class="n">5 2 1 3 4</td><td class="n"><b style="color:var(--active)">1</b></td><td class="n">—</td><td class="n">1</td><td class="n">5 2 3 4</td></tr>
+<tr><td class="n">2</td><td>전체 → 작은 쪽 → 큰 쪽</td><td class="n">5 2 3 4</td><td class="n"><b style="color:var(--active)">3</b></td><td class="n">2</td><td class="n">3</td><td class="n">5 4</td></tr>
+<tr><td class="n">3</td><td>전체 → 작은 쪽 → 큰 쪽 → 작은 쪽</td><td class="n">2</td><td class="n"><span style="color:var(--muted)">하나뿐이라 그대로</span></td><td class="n">—</td><td class="n">2</td><td class="n">—</td></tr>
+<tr><td class="n">3</td><td>전체 → 작은 쪽 → 큰 쪽 → 큰 쪽</td><td class="n">5 4</td><td class="n"><b style="color:var(--active)">4</b></td><td class="n">—</td><td class="n">4</td><td class="n">5</td></tr>
+<tr><td class="n">4</td><td>전체 → 작은 쪽 → 큰 쪽 → 큰 쪽 → 큰 쪽</td><td class="n">5</td><td class="n"><span style="color:var(--muted)">하나뿐이라 그대로</span></td><td class="n">—</td><td class="n">5</td><td class="n">—</td></tr>
+<tr><td class="n">1</td><td>전체 → 큰 쪽</td><td class="n">9 8</td><td class="n"><b style="color:var(--active)">8</b></td><td class="n">—</td><td class="n">8</td><td class="n">9</td></tr>
+<tr><td class="n">2</td><td>전체 → 큰 쪽 → 큰 쪽</td><td class="n">9</td><td class="n"><span style="color:var(--muted)">하나뿐이라 그대로</span></td><td class="n">—</td><td class="n">9</td><td class="n">—</td></tr>
+</tbody></table></div></div>
+<div class="block"><h3>이어 붙이기</h3>
+<p class="note">나눈 뒤에는 <b>작은 쪽 + 기준 + 큰 쪽</b> 순서로 붙이기만 하면 됩니다. 기준보다 작은 것은 전부 왼쪽에, 큰 것은 전부 오른쪽에 있으니까요.</p>
+<div class="scroll">
+<div class="step"><div class="lbl">맨 위</div><div class="code"><span><b>3행</b><em>pivot ← A의 가운데 값</em></span><span><b>4~6행</b><em>less · same · more 로 나눈다</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">5</span><span class="cell sm">2</span><span class="cell sm">1</span><span class="cell sm">3</span><span class="cell sm">4</span></span><span class="grp"><span class="cell sm">7</span></span><span class="grp"><span class="cell sm">9</span><span class="cell sm">8</span></span></div><p class="note">기준 <b>7</b>로 나눈 결과입니다. 이제 왼쪽 덩이와 오른쪽 덩이만 각각 정렬하면 됩니다.</p></div></div>
+<div class="step"><div class="lbl">붙인 뒤</div><div class="code"><span><b>7행</b><em>RETURN QuickSort(less) + same + QuickSort(more)</em></span></div><div class="body"><div class="row groups"><span class="grp"><span class="cell sm">1</span><span class="cell sm">2</span><span class="cell sm">3</span><span class="cell sm">4</span><span class="cell sm">5</span><span class="cell sm">7</span><span class="cell sm">8</span><span class="cell sm">9</span></span></div><p class="note"><b>1 2 3 4 5 7 8 9</b></p></div></div>
+</div></div>
+<div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>21</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>17</td><td></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>17</td><td></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">정렬된 데이터에서도 비교 횟수가 크게 늘어나지 않는 것은 <b>가운데 자리의 값</b>을 기준으로 골랐기 때문입니다. 만약 맨 앞 값을 기준으로 고르면 정렬된 데이터에서 매번 한쪽으로 쏠려 선택 정렬처럼 <b>O(n²)</b>이 됩니다. 평균은 <b>O(n log n)</b>입니다.</p></div><div class="callout">
+<p>기준을 <b>가운데</b> 값으로 고르면 대개 양쪽이 비슷하게 나뉘어 O(n log n)이 됩니다.</p>
+<p>그런데 늘 <b>맨 앞</b>을 기준으로 고르고 이미 정렬된 데이터를 넣으면, 한쪽이 텅 비고 다른 쪽에 전부 몰립니다.
+나눈 보람이 없어져 <b>O(n²)</b> 가 됩니다. 최선과 최악이 가장 크게 벌어지는 알고리즘입니다.</p>
+<p>우리 코드가 가운데를 고른 것은, 실제 데이터가 이미 정렬돼 있거나 거의 정렬된 경우가 흔해서 <b>맨 앞을 고르면 그때가 최악이 되기 때문</b>입니다.</p>
+</div>
+</section>
+
+<section class="algo" id="lab">
+<div class="mark"><span class="num">06</span><h2>직접 돌려 보기</h2></div>
+<p class="sum">위의 「몇 번 비교하나」 표는 제가 세어 둔 숫자입니다. 여기서는 직접 데이터를 넣고 돌려서 확인할 수 있습니다.</p>
+<div class="lab">
+<div class="ctl">
+<label>데이터
+<select id="labData">
+<option value="doc">이 자료의 데이터 (5 2 9 1 7 3 8 4)</option>
+<option value="rand">무작위</option>
+<option value="sorted">이미 정렬됨</option>
+<option value="rev">거꾸로 정렬됨</option>
+<option value="custom">직접 입력</option>
+</select></label>
+<label id="labNwrap">개수 <input id="labN" type="number" min="4" max="14" value="10"></label>
+<input id="labCustom" type="text" value="5 2 9 1 7 3 8 4" size="22" style="display:none">
+<label>정렬
+<select id="labAlgo">
+<option value="sel">선택 정렬</option>
+<option value="bub">버블 정렬</option>
+<option value="ins">삽입 정렬</option>
+<option value="mer">병합 정렬</option>
+<option value="qui">퀵 정렬</option>
+</select></label>
+</div>
+<div class="labkey" id="labKey"></div>
+<div class="bars" id="labBars"></div>
+<input type="range" id="labRange" min="0" max="0" value="0">
+<div class="ctl" style="margin:12px 0 0">
+<button id="labPlay" class="pri">▶ 재생</button>
+<button id="labPrev">◀ 이전</button>
+<button id="labNext">▶ 다음</button>
+<button id="labReset">↺ 처음으로</button>
+<span style="font-size:.82rem; color:var(--muted)">단계 <b id="labStep" style="color:var(--ink)"></b></span>
+</div>
+<div class="labfoot">
+<span class="labmsg" id="labMsg"></span>
+<span>비교 <b id="labC">0</b></span>
+<span>이동·교환 <b id="labM">0</b></span>
+</div>
+</div>
+<p style="margin-top:24px"><b>이렇게 해 보십시오.</b> 데이터를 <b>「이미 정렬됨」</b>으로 바꾸고 선택 정렬과 버블 정렬을 각각 돌려 보세요.
+선택 정렬은 비교 횟수가 그대로인데 버블 정렬은 첫 회차에서 멈춥니다. 그 까닭이 <code>swapped</code>입니다.</p>
+<h3 style="margin-top:34px">다섯 정렬을 같은 데이터로</h3>
+<p style="margin-top:8px">지금 고른 데이터 <b id="cmpData"></b> 로 다섯 정렬을 모두 돌린 결과입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
+<div class="range"><div class="ttl">비교 횟수</div>
+<table id="cmpTable"><thead><tr><th>정렬</th><th>비교</th><th></th><th>이동·교환</th></tr></thead>
+<tbody id="cmpBody"></tbody></table></div>
+</section>
+
+<section class="algo" id="fill">
+<div class="mark"><span class="num">07</span><h2>추적 표 채우기</h2></div>
+<p class="sum">선택 정렬의 <b>첫 회차</b>를 표로 따라가는 연습입니다. 새 문제를 누를 때마다 데이터가 바뀝니다.</p>
+<div class="lab fill">
+<p style="font-size:.9rem; margin-bottom:12px">데이터 <b id="fillArr" style="color:var(--active)"></b> · <code>i = 0</code>, <code>min</code>은 0에서 시작합니다.</p>
+<div class="scroll"><table><thead id="fillHead"></thead><tbody id="fillBody"></tbody></table></div>
+<div class="ctl" style="margin:16px 0 0">
+<button id="fillCheck" class="pri">확인</button>
+<button id="fillShow">정답 보기</button>
+<button id="fillNew">새 문제</button>
+</div>
+<div class="fmsg" id="fillMsg"></div>
+</div>
+</section>
+
+<section class="algo" id="quiz">
+<div class="mark"><span class="num">08</span><h2>반복문 보고 빅 오 맞히기</h2></div>
+<p class="sum">00절의 표를 가리고 해 보십시오. 반복문이 몇 겹인지, 나란히 있는지 안에 들어 있는지만 보면 됩니다.</p>
+<div class="lab">
+<div class="ctl" style="margin-bottom:12px">
+<span style="font-size:.82rem; color:var(--muted)">문제 <b id="qNum" style="color:var(--ink)"></b></span>
+<span style="font-size:.82rem; color:var(--muted)"><b id="qScore" style="color:var(--ink)"></b></span>
+</div>
+<pre id="qCode"></pre>
+<div id="qOpts"></div>
+<div class="qwhy" id="qWhy"></div>
+<div class="ctl" style="margin:16px 0 0">
+<button id="qNext" class="pri">다음 문제</button>
+<button id="qAgain">처음부터</button>
+</div>
+</div>
+</section>
+<footer>
+<p>모든 숫자와 단계는 수업에서 쓴 코드를 그대로 실행해 얻은 것입니다.
+쓰인 데이터는 <code>5 2 9 1 7 3 8 4</code> 하나입니다.</p>
+</footer>
+</div>
+<script>
+(function(){
+'use strict';
+// ── 기록기: 각 정렬을 돌리며 프레임을 남긴다 ──────────────
+function mk(A0){ return {A:A0.slice(), F:[], c:0, m:0}; }
+function snap(S, o){
+  var f = {arr:S.A.slice(), c:S.c, m:S.m, cmp:null, act:null,
+           fixL:S.fixL||0, fixR:S.fixR||0, seg:null, key:null, msg:''};
+  for(var k in o) f[k]=o[k];
+  S.F.push(f);
+}
+function recSel(a){
+  var S=mk(a), A=S.A, n=A.length; S.fixL=0;
+  snap(S,{msg:'시작'});
+  for(var i=0;i<n-1;i++){
+    var mi=i; snap(S,{act:[i],msg:'min ← '+i});
+    for(var j=i+1;j<n;j++){
+      S.c++; snap(S,{cmp:[j,mi],msg:'A['+j+'] < A['+mi+'] ?'});
+      if(A[j]<A[mi]){ mi=j; snap(S,{act:[mi],msg:'min ← '+j}); }
+    }
+    if(mi!==i){ var t=A[i];A[i]=A[mi];A[mi]=t; S.m++; snap(S,{swp:[i,mi],cmp:[i,mi],msg:'A['+i+'] ↔ A['+mi+'] 교환'}); }
+    else snap(S,{msg:'이미 제자리 — 교환 없음'});
+    S.fixL=i+1; snap(S,{msg:(i+1)+'회차 끝 — 왼쪽 '+(i+1)+'칸 확정'});
+  }
+  S.fixL=n; snap(S,{msg:'끝'});
+  return S;
+}
+function recBub(a){
+  var S=mk(a), A=S.A, n=A.length; S.fixR=0;
+  snap(S,{msg:'시작'});
+  for(var i=0;i<n-1;i++){
+    var sw=false;
+    for(var j=0;j<n-1-i;j++){
+      S.c++; snap(S,{cmp:[j,j+1],msg:'A['+j+'] > A['+(j+1)+'] ?'});
+      if(A[j]>A[j+1]){ var t=A[j];A[j]=A[j+1];A[j+1]=t; S.m++; sw=true;
+        snap(S,{swp:[j,j+1],cmp:[j,j+1],msg:'교환'}); }
+    }
+    S.fixR=i+1; snap(S,{msg:(i+1)+'회차 끝 — 오른쪽 '+(i+1)+'칸 확정'});
+    if(!sw){ S.fixR=n; snap(S,{msg:'교환이 한 번도 없었습니다 → 멈춤'}); break; }
+  }
+  S.fixR=n; snap(S,{msg:'끝'});
+  return S;
+}
+function recIns(a){
+  var S=mk(a), A=S.A, n=A.length; S.fixL=1;
+  snap(S,{msg:'시작 — A[0] 한 칸은 이미 정렬된 셈'});
+  for(var i=1;i<n;i++){
+    var key=A[i];
+    snap(S,{key:key,act:[i],msg:'key ← A['+i+'] = '+key});
+    var j=i-1;
+    while(j>=0){
+      S.c++; snap(S,{key:key,cmp:[j],msg:'A['+j+'] > key('+key+') ?'});
+      if(A[j]>key){ A[j+1]=A[j]; S.m++; snap(S,{key:key,act:[j+1],msg:'A['+(j+1)+'] ← A['+j+'] 밀기'}); j--; }
+      else { snap(S,{key:key,msg:'멈춤 — 자리를 찾았습니다'}); break; }
+    }
+    if(j<0) snap(S,{key:key,msg:'j = -1 — 왼쪽 끝까지 갔습니다'});
+    A[j+1]=key; S.fixL=i+1;
+    snap(S,{act:[j+1],msg:'A['+(j+1)+'] ← key('+key+') 꽂기'});
+  }
+  S.fixL=n; snap(S,{msg:'끝'});
+  return S;
+}
+function recMer(a){
+  var S=mk(a), A=S.A, n=A.length;
+  snap(S,{msg:'시작'});
+  (function ms(lo,hi){
+    if(hi-lo<=1) return;
+    var mid=(lo+hi)>>1;
+    ms(lo,mid); ms(mid,hi);
+    var L=A.slice(lo,mid), R=A.slice(mid,hi), i=0,j=0,k=lo;
+    snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 두 조각을 합칩니다'});
+    while(i<L.length&&j<R.length){
+      S.c++; snap(S,{seg:[lo,hi-1],msg:'왼쪽 '+L[i]+' ≤ 오른쪽 '+R[j]+' ?'});
+      if(L[i]<=R[j]) A[k++]=L[i++]; else A[k++]=R[j++];
+      S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'A['+(k-1)+'] ← '+A[k-1]});
+    }
+    while(i<L.length){ A[k++]=L[i++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 붙임'}); }
+    while(j<R.length){ A[k++]=R[j++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 붙임'}); }
+  })(0,n);
+  S.fixL=n; snap(S,{msg:'끝'});
+  return S;
+}
+function recQui(a){
+  var S=mk(a), A=S.A, n=A.length;
+  snap(S,{msg:'시작'});
+  (function qs(lo,hi){
+    if(hi-lo<=1) return;
+    var seg=A.slice(lo,hi), p=seg[seg.length>>1];
+    snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 기준 = '+p});
+    var less=[],same=[],more=[];
+    for(var t=0;t<seg.length;t++){
+      S.c++; snap(S,{seg:[lo,hi-1],cmp:[lo+t],msg:seg[t]+' 와 기준 '+p+' 비교'});
+      if(seg[t]<p) less.push(seg[t]); else if(seg[t]>p) more.push(seg[t]); else same.push(seg[t]);
+    }
+    var out=less.concat(same,more);
+    for(var u=0;u<out.length;u++){ A[lo+u]=out[u]; S.m++; }
+    snap(S,{seg:[lo,hi-1],msg:'작은 것 '+less.length+'개 · 같은 것 '+same.length+'개 · 큰 것 '+more.length+'개로 나눔'});
+    qs(lo, lo+less.length);
+    qs(lo+less.length+same.length, hi);
+  })(0,n);
+  S.fixL=n; snap(S,{msg:'끝'});
+  return S;
+}
+var REC={sel:recSel, bub:recBub, ins:recIns, mer:recMer, qui:recQui};
+var NAME={sel:'선택 정렬', bub:'버블 정렬', ins:'삽입 정렬', mer:'병합 정렬', qui:'퀵 정렬'};
+
+// ── A. 정렬 실험실 ────────────────────────────────────
+var LAB={data:[5,2,9,1,7,3,8,4], algo:'sel', S:null, k:0, timer:null};
+function $(id){ return document.getElementById(id); }
+function makeData(kind,n){
+  var a=[],i;
+  if(kind==='doc') return [5,2,9,1,7,3,8,4];
+  for(i=1;i<=n;i++) a.push(i);
+  if(kind==='sorted') return a;
+  if(kind==='rev') return a.reverse();
+  for(i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t; }
+  return a;
+}
+function build(){
+  LAB.S = REC[LAB.algo](LAB.data);
+  LAB.k = 0; draw();
+}
+function draw(){
+  var S=LAB.S, f=S.F[LAB.k], mx=Math.max.apply(null,f.arr), html='';
+  for(var i=0;i<f.arr.length;i++){
+    var cls='bar';
+    if(f.fixL && i<f.fixL) cls+=' fix';
+    if(f.fixR && i>=f.arr.length-f.fixR) cls+=' fix';
+    if(f.seg && i>=f.seg[0] && i<=f.seg[1]) cls+=' seg';
+    if(f.cmp && f.cmp.indexOf(i)>=0) cls+=' cmp';
+    if(f.act && f.act.indexOf(i)>=0) cls+=' act';
+    html+='<div class="'+cls+'" style="height:'+(18+72*f.arr[i]/mx)+'px"><span>'+f.arr[i]+'</span></div>';
+  }
+  $('labBars').innerHTML=html;
+  $('labKey').innerHTML = f.key!==null&&f.key!==undefined ? '손에 든 값 <b>'+f.key+'</b>' : '';
+  $('labMsg').textContent=f.msg;
+  $('labC').textContent=f.c; $('labM').textContent=f.m;
+  $('labStep').textContent=(LAB.k+1)+' / '+S.F.length;
+  $('labRange').max=S.F.length-1; $('labRange').value=LAB.k;
+}
+function step(d){
+  if(!LAB.S) return;
+  LAB.k=Math.max(0,Math.min(LAB.S.F.length-1,LAB.k+d)); draw();
+  if(LAB.k>=LAB.S.F.length-1) stop();
+}
+function play(){
+  if(LAB.timer){ stop(); return; }
+  if(LAB.k>=LAB.S.F.length-1) LAB.k=0;
+  $('labPlay').textContent='❙❙ 멈춤';
+  LAB.timer=setInterval(function(){ step(1); }, 260);
+}
+function stop(){ if(LAB.timer){clearInterval(LAB.timer); LAB.timer=null;} $('labPlay').textContent='▶ 재생'; }
+function compareAll(){
+  var out='', rows=[];
+  for(var k in REC){ var S=REC[k](LAB.data); rows.push([NAME[k],S.c,S.m]); }
+  var mx=Math.max.apply(null,rows.map(function(r){return r[1];}));
+  for(var i=0;i<rows.length;i++){
+    out+='<tr><td>'+rows[i][0]+'</td><td class="n"><b>'+rows[i][1]+'</b></td>'
+       + '<td><div class="mini" style="width:'+Math.round(100*rows[i][1]/mx)+'%"></div></td>'
+       + '<td class="n">'+rows[i][2]+'</td></tr>';
+  }
+  $('cmpBody').innerHTML=out;
+  $('cmpData').textContent='['+LAB.data.join(', ')+']';
+}
+
+// ── B. 추적 표 채우기 ─────────────────────────────────
+var FILL={arr:null, ans:null};
+function newFill(){
+  var a=makeData('rand',8);
+  FILL.arr=a;
+  var mi=0, rows=[];
+  rows.push({j:'시작', aj:'—', am:a[0], cond:'—', min:0});
+  for(var j=1;j<a.length;j++){
+    var ok = a[j]<a[mi];
+    var am = a[mi];
+    if(ok) mi=j;
+    rows.push({j:j, aj:a[j], am:am, cond: ok?'참':'거짓', min:mi});
+  }
+  FILL.ans=rows;
+  var h='<tr><th>j</th><th>A[j]</th><th>A[min]</th><th>A[j] &lt; A[min]</th><th>min</th></tr>';
+  var b='';
+  for(var i=0;i<rows.length;i++){
+    var r=rows[i];
+    if(i===0){ b+='<tr><td>시작</td><td>—</td><td>'+r.am+'</td><td>—</td><td>0</td></tr>'; continue; }
+    b+='<tr><td>'+r.j+'</td><td>'+r.aj+'</td><td>'+r.am+'</td>'
+      +'<td><select data-i="'+i+'" data-f="cond"><option value=""></option><option>참</option><option>거짓</option></select></td>'
+      +'<td><input data-i="'+i+'" data-f="min" inputmode="numeric" size="2"></td></tr>';
+  }
+  document.getElementById('fillHead').innerHTML=h;
+  document.getElementById('fillBody').innerHTML=b;
+  document.getElementById('fillArr').textContent='['+a.join(', ')+']';
+  document.getElementById('fillMsg').textContent='';
+  document.getElementById('fillMsg').className='fmsg';
+}
+function checkFill(){
+  var els=document.querySelectorAll('#fillBody [data-i]'), ok=0, tot=0;
+  for(var k=0;k<els.length;k++){
+    var e=els[k], i=+e.getAttribute('data-i'), f=e.getAttribute('data-f');
+    var want=String(FILL.ans[i][f]), got=String(e.value).trim();
+    tot++;
+    e.classList.remove('good','bad');
+    if(got===want){ e.classList.add('good'); ok++; } else e.classList.add('bad');
+  }
+  var m=document.getElementById('fillMsg');
+  m.textContent = ok+' / '+tot + (ok===tot ? '  전부 맞았습니다.' : '  빨간 칸을 다시 보세요.');
+  m.className = 'fmsg ' + (ok===tot ? 'good' : 'bad');
+}
+function showFill(){
+  var els=document.querySelectorAll('#fillBody [data-i]');
+  for(var k=0;k<els.length;k++){
+    var e=els[k], i=+e.getAttribute('data-i'), f=e.getAttribute('data-f');
+    e.value=String(FILL.ans[i][f]); e.classList.remove('bad'); e.classList.add('good');
+  }
+  document.getElementById('fillMsg').textContent='정답을 채웠습니다.';
+  document.getElementById('fillMsg').className='fmsg';
+}
+
+// ── C. 반복문 → 빅 오 퀴즈 ────────────────────────────
+var QB=[
+ {code:'for i in range(n):\n    print(i)', a:'O(n)', why:'한 겹입니다. n번 돕니다.'},
+ {code:'for i in range(n):\n    for j in range(n):\n        print(i, j)', a:'O(n²)', why:'안쪽이 바깥의 안에 있으므로 n × n 입니다.'},
+ {code:'for i in range(n):\n    for j in range(i):\n        print(i, j)', a:'O(n²)', why:'삼각형이라 n(n-1)/2번이지만, 계수 1/2을 지우면 n² 입니다.'},
+ {code:'for i in range(n):\n    print(i)\nfor j in range(n):\n    print(j)', a:'O(n)', why:'나란히 있으므로 n + n = 2n. 계수 2를 지우면 n 입니다.'},
+ {code:'i = n\nwhile i > 1:\n    i = i // 2\n    print(i)', a:'O(log n)', why:'반으로 나눌 때마다 한 번씩이므로 log₂n번입니다.'},
+ {code:'for i in range(100):\n    print(i)', a:'O(1)', why:'100은 n과 상관없는 고정된 수입니다.'},
+ {code:'print(A[0])\nprint(A[len(A) - 1])', a:'O(1)', why:'반복문이 없습니다. 리스트가 길어져도 하는 일이 그대로입니다.'},
+ {code:'for i in range(n):\n    j = n\n    while j > 1:\n        j = j // 2', a:'O(n log n)', why:'바깥 n번 안에 log n번이 들어 있으므로 n × log n 입니다.'},
+ {code:'for i in range(n):\n    for j in range(n):\n        for k in range(n):\n            pass', a:'O(n³)', why:'세 겹이므로 n × n × n 입니다.'}
+];
+var OPTS=['O(1)','O(log n)','O(n)','O(n log n)','O(n²)','O(n³)'];
+var QZ={i:0, ok:0, done:0, order:[]};
+function newQuiz(){
+  QZ.order=QB.map(function(_,i){return i;});
+  for(var i=QZ.order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=QZ.order[i];QZ.order[i]=QZ.order[j];QZ.order[j]=t; }
+  QZ.i=0; QZ.ok=0; QZ.done=0; renderQ();
+}
+function renderQ(){
+  var q=QB[QZ.order[QZ.i]];
+  document.getElementById('qCode').textContent=q.code;
+  var h='';
+  for(var i=0;i<OPTS.length;i++) h+='<button class="opt" data-v="'+OPTS[i]+'">'+OPTS[i]+'</button>';
+  document.getElementById('qOpts').innerHTML=h;
+  document.getElementById('qWhy').textContent='';
+  document.getElementById('qWhy').className='qwhy';
+  document.getElementById('qNum').textContent=(QZ.i+1)+' / '+QB.length;
+  document.getElementById('qScore').textContent=QZ.ok+' 맞음';
+  var bs=document.querySelectorAll('#qOpts .opt');
+  for(var k=0;k<bs.length;k++) bs[k].onclick=answer;
+}
+function answer(e){
+  var q=QB[QZ.order[QZ.i]], v=e.currentTarget.getAttribute('data-v');
+  var bs=document.querySelectorAll('#qOpts .opt');
+  for(var k=0;k<bs.length;k++){
+    bs[k].onclick=null;
+    var bv=bs[k].getAttribute('data-v');
+    if(bv===q.a) bs[k].classList.add('good');
+    else if(bv===v) bs[k].classList.add('bad');
+  }
+  var w=document.getElementById('qWhy');
+  if(v===q.a){ QZ.ok++; w.textContent='맞았습니다. '+q.why; w.className='qwhy good'; }
+  else { w.textContent='정답은 '+q.a+' 입니다. '+q.why; w.className='qwhy bad'; }
+  QZ.done++;
+  document.getElementById('qScore').textContent=QZ.ok+' 맞음';
+}
+function nextQ(){
+  if(QZ.i<QB.length-1){ QZ.i++; renderQ(); }
+  else { document.getElementById('qWhy').textContent='마지막 문제입니다. '+QB.length+'문제 중 '+QZ.ok+'개 맞았습니다.'; }
+}
+
+// ── 시작 ──────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function(){
+  var d=$('labData'), al=$('labAlgo'), n=$('labN');
+  function reset(){
+    var kind=d.value;
+    LAB.data = kind==='custom' ? parseCustom() : makeData(kind, +n.value);
+    LAB.algo = al.value; stop(); build(); compareAll();
+    $('labCustom').style.display = kind==='custom' ? '' : 'none';
+    $('labNwrap').style.display  = kind==='doc'||kind==='custom' ? 'none' : '';
+  }
+  function parseCustom(){
+    var v=$('labCustom').value.split(/[^0-9]+/).filter(function(x){return x!=='';}).map(Number).slice(0,14);
+    return v.length>=2 ? v : [5,2,9,1,7,3,8,4];
+  }
+  d.onchange=reset; al.onchange=reset; n.onchange=reset;
+  $('labCustom').onchange=reset;
+  $('labPlay').onclick=play;
+  $('labNext').onclick=function(){ stop(); step(1); };
+  $('labPrev').onclick=function(){ stop(); step(-1); };
+  $('labReset').onclick=function(){ stop(); LAB.k=0; draw(); };
+  $('labRange').oninput=function(){ stop(); LAB.k=+this.value; draw(); };
+  reset();
+  newFill();
+  $('fillCheck').onclick=checkFill;
+  $('fillShow').onclick=showFill;
+  $('fillNew').onclick=newFill;
+  newQuiz();
+  $('qNext').onclick=nextQ;
+  $('qAgain').onclick=newQuiz;
+});
+})();
+
+</script>
