@@ -80,7 +80,7 @@ section.algo{padding:56px 0; border-bottom:1px solid var(--line)}
 }
 .cell.sm{min-width:31px; height:31px; font-size:.86rem; border-radius:6px}
 .cell.fixed{background:var(--fixed-bg); border-color:var(--fixed-line); color:var(--fixed-fg); font-weight:700}
-.cell.active{background:var(--active-bg); border-color:var(--active-line); border-width:2px; color:var(--active); font-weight:700}
+.cell.active{background:var(--surface); border-color:var(--warm); border-width:2px; color:var(--warm); font-weight:700}
 .cell.srt{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active); font-weight:700}
 .cell.ghost{opacity:.32}
 .row.groups{gap:14px}
@@ -198,14 +198,14 @@ sub{font-size:.7em; line-height:0; vertical-align:-.25em; letter-spacing:0}
 .lableg span{display:flex; align-items:center; gap:6px}
 .lableg i{width:14px; height:14px; border-radius:4px; border:1px solid var(--line); background:var(--line-soft)}
 .lableg i.f{background:var(--fixed-bg); border-color:var(--fixed-line)}
-.lableg i.c{background:var(--active); border-color:var(--active)}
+.lableg i.c{background:var(--warm); border-color:var(--warm)}
 .lableg i.s{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active)}
 .lableg i.ml{background:color-mix(in srgb, var(--active) 30%, var(--surface)); border-color:var(--active)}
 .lableg i.mr{background:color-mix(in srgb, var(--warm) 26%, var(--surface)); border-color:var(--warm)}
 .lableg i.rl{background:none; border:2px solid var(--active)}
 .lableg i.rr{background:none; border:2px solid var(--warm)}
-.bar.cmp{background:var(--active); border-color:var(--active); color:#fff}
-:root:not([data-theme="light"]) .bar.cmp, :root[data-theme="dark"] .bar.cmp{color:#0E1A2B}
+.bar.cmp{background:var(--warm); border-color:var(--warm); color:#fff; font-weight:700}
+:root:not([data-theme="light"]) .bar.cmp, :root[data-theme="dark"] .bar.cmp{color:#2A1710}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .bar.cmp{color:#fff}}
 .bar.act{outline:3px solid var(--active); outline-offset:1px}
 .labfoot{display:flex; flex-wrap:wrap; gap:8px 20px; align-items:center; margin-top:12px;
@@ -289,7 +289,7 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <div class="labkey" id="labKey"></div>
 <div id="labMg"></div>
 <div class="bars" id="labBars"></div>
-<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><div class="lableg" id="labLegMer" style="display:none"><span><i class="ml"></i> 나눈 왼쪽</span><span><i class="mr"></i> 나눈 오른쪽</span><span><i class="rl"></i> 왼쪽에 아직 남은 것</span><span><i class="rr"></i> 오른쪽에 아직 남은 것</span></div><input type="range" id="labRange" min="0" max="0" value="0">
+<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬된 구역 <span style="opacity:.7">(삽입·병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><div class="lableg" id="labLegMer" style="display:none"><span><i class="ml"></i> 나눈 왼쪽</span><span><i class="mr"></i> 나눈 오른쪽</span><span><i class="rl"></i> 왼쪽에 아직 남은 것</span><span><i class="rr"></i> 오른쪽에 아직 남은 것</span></div><input type="range" id="labRange" min="0" max="0" value="0">
 <div class="ctl" style="margin:12px 0 0">
 <button id="labPlay" class="pri">▶ 재생</button>
 <button id="labPrev">◀ 이전</button>
@@ -611,8 +611,12 @@ function recBub(a){
   return S;
 }
 function recIns(a){
-  var S=mk(a), A=S.A, n=A.length; S.fixL=1;
-  snap(S,{msg:'시작 — A[0] 한 칸은 이미 정렬된 셈'});
+  var S=mk(a), A=S.A, n=A.length;
+  // 삽입 정렬의 왼쪽 구역은 '정렬된 구역'이지 '자리가 확정된 값'이 아니다.
+  // 뒤에서 더 작은 값이 오면 다시 밀리므로 연한 파랑(srt)으로 칠한다.
+  S.srt=[]; for(var z=0;z<n;z++) S.srt.push(0);
+  S.srt[0]=1;
+  snap(S,{msg:'시작 — A[0] 한 칸은 이미 정렬된 구역입니다'});
   for(var i=1;i<n;i++){
     var key=A[i];
     snap(S,{key:key,act:[i],msg:'key ← A['+i+'] = '+key});
@@ -623,10 +627,11 @@ function recIns(a){
       else { snap(S,{key:key,msg:'멈춤 — 자리를 찾았습니다'}); break; }
     }
     if(j<0) snap(S,{key:key,msg:'j = -1 — 왼쪽 끝까지 갔습니다'});
-    A[j+1]=key; S.fixL=i+1;
-    snap(S,{act:[j+1],msg:'A['+(j+1)+'] ← key('+key+') 꽂기'});
+    A[j+1]=key; S.srt[i]=1;
+    snap(S,{act:[j+1],msg:'A['+(j+1)+'] ← key('+key+') 꽂기 — 정렬된 구역이 '+(i+1)+'칸이 되었습니다'});
   }
-  S.fixL=n; snap(S,{msg:'끝'});
+  for(var z2=0;z2<n;z2++) S.srt[z2]=0;
+  S.fixL=n; snap(S,{msg:'끝 — 이제 모든 자리가 확정되었습니다'});
   return S;
 }
 function recMer(a){
