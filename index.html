@@ -138,12 +138,6 @@ th{font-size:.76rem; letter-spacing:.07em; text-transform:uppercase; color:var(-
 td.n{font-family:"Gothic A1", sans-serif; font-variant-numeric:tabular-nums; white-space:nowrap}
 tbody tr:hover{background:var(--line-soft)}
 
-.legend{display:flex; flex-wrap:wrap; gap:10px 24px; margin-top:22px; padding:16px 20px;
-  background:var(--surface); border:1px solid var(--line); border-radius:10px}
-.legend div{display:flex; align-items:center; gap:9px; font-size:.87rem; color:var(--muted)}
-.key{width:22px; height:22px; border-radius:6px; border:1px solid var(--line); background:var(--surface)}
-.key.f{background:var(--fixed-bg); border-color:var(--fixed-line)}
-.key.a{background:var(--active-bg); border-color:var(--active-line); border-width:2px}
 
 .callout{margin-top:26px; padding:20px 24px; border:1px solid var(--line);
   border-left:4px solid var(--active); background:var(--surface); border-radius:0 10px 10px 0;
@@ -255,25 +249,71 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <header class="top">
 <div class="eyebrow">알고리즘 설계 · 3블록</div>
 <h1>정렬 보충 자료</h1>
-<p class="lede">선택 · 버블 · 삽입 · 병합 · 퀵 정렬을 <b>같은 데이터 하나</b>로 비교해 보겠습니다. 정렬마다 끝에 「몇 번 비교하나」 표를 붙여 두었으니, 수업에서 배웠던 <b>빅 오</b>를 먼저 다시 자세히 살펴봅시다.</p>
+<p class="lede">선택 · 버블 · 삽입 · 병합 · 퀵 정렬을 <b>같은 데이터 하나</b>로 비교해 보겠습니다. 먼저 아래에서 <b>직접 돌려 보십시오.</b> 눈으로 한 번 보고 나면 그 뒤의 설명이 훨씬 쉽게 읽힙니다.</p>
 <div class="block"><h3>여기서 쓰는 숫자</h3><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div></div>
-<div class="legend">
-  <div><span class="key f"></span> 자리가 확정된 값</div>
-  <div><span class="key a"></span> 지금 보고 있는 값</div>
-  <div><span class="key"></span> 아직 확정되지 않은 값</div>
-</div>
 </header>
 <nav class="jump"><ul>
+<li><a href="#lab">정렬 시각화</a></li>
 <li><a href="#bigo">빅 오 다시 보기</a></li>
 <li><a href="#sel">선택 정렬</a></li>
 <li><a href="#bub">버블 정렬</a></li>
 <li><a href="#ins">삽입 정렬</a></li>
 <li><a href="#mer">병합 정렬</a></li>
 <li><a href="#qui">퀵 정렬</a></li>
-<li><a href="#lab">정렬 시각화</a></li>
 <li><a href="#quiz">빅 오 맞히기</a></li>
 </ul></nav>
-<section class="algo" id="bigo"><div class="mark"><span class="num">00</span><h2>빅 오 다시 보기</h2></div><div class="idea"><p>다섯 정렬 절마다 끝에 <b>「몇 번 비교하나」</b> 표를 붙여 두었습니다. 그 표를 읽는 데 빅 오가 쓰이니, 수업에서 배웠던 것을 여기서 다시 자세히 살펴봅시다.</p></div><h3 style="margin-top:34px">빅 오는 이렇게 만듭니다</h3><p style="margin-top:8px">세 단계입니다. 순서만 지키면 됩니다.</p><div class="range"><div class="ttl">연산 횟수 → 빅 오</div><table><tbody><tr><td>①</td><td>연산 횟수를 세어 n의 식으로 쓴다</td><td>3n² + 50n + 200</td></tr><tr><td>②</td><td><b>최고차항</b>만 남긴다</td><td>3n²</td></tr><tr><td>③</td><td><b>계수</b>를 지우고 O( ) 안에 넣는다</td><td><b>O(n²)</b></td></tr></tbody></table></div><p style="margin-top:16px">몇 개 더 해 보면 익숙해집니다.</p><div class="range"><div class="ttl">연습</div><table><tbody><tr><td>n(n-1)/2</td><td></td><td>먼저 풀면 n²/2 − n/2 입니다. 최고차항 n²/2 → 계수 1/2을 지우면 <b>O(n²)</b></td></tr><tr><td>3n + 5</td><td></td><td>최고차항 3n → 계수 3을 지우면 <b>O(n)</b></td></tr><tr><td>log<sub>2</sub>n + 1</td><td></td><td>최고차항 log<sub>2</sub>n → <b>O(log n)</b> (밑도 지웁니다. 까닭은 아래에)</td></tr><tr><td>2n log<sub>2</sub>n + 4n</td><td></td><td>최고차항 2n log<sub>2</sub>n → <b>O(n log n)</b></td></tr><tr><td>100</td><td></td><td>n이 없습니다. n이 커져도 100 그대로이므로 <b>O(1)</b></td></tr></tbody></table></div><h3 style="margin-top:34px">수학에서는 이렇게 정의합니다</h3>
+<section class="algo" id="lab">
+<div class="mark"><span class="num">00</span><h2>정렬 시각화</h2></div>
+<p class="sum">먼저 여기서 다섯 정렬을 돌려 보십시오. <b>▶ 다음</b>을 눌러 한 단계씩 넘기면 무엇이 어떻게 움직이는지 보입니다. 다 보고 나서 아래로 내려가 하나씩 읽으면 됩니다.</p>
+<div class="lab">
+<div class="ctl">
+<label>데이터
+<select id="labData">
+<option value="doc">이 자료의 데이터 (5 2 9 1 7 3 8 4)</option>
+<option value="rand">무작위</option>
+<option value="sorted">이미 정렬됨</option>
+<option value="rev">거꾸로 정렬됨</option>
+<option value="custom">직접 입력</option>
+</select></label>
+<label id="labNwrap">개수 <input id="labN" type="number" min="4" max="14" value="10"></label>
+<input id="labCustom" type="text" value="5 2 9 1 7 3 8 4" size="22" style="display:none">
+<label>정렬
+<select id="labAlgo">
+<option value="sel">선택 정렬</option>
+<option value="bub">버블 정렬</option>
+<option value="ins">삽입 정렬</option>
+<option value="mer">병합 정렬</option>
+<option value="qui">퀵 정렬</option>
+</select></label>
+</div>
+<div class="labkey" id="labKey"></div>
+<div id="labMg"></div>
+<div class="bars" id="labBars"></div>
+<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><div class="lableg" id="labLegMer" style="display:none"><span><i class="ml"></i> 나눈 왼쪽</span><span><i class="mr"></i> 나눈 오른쪽</span><span><i class="rl"></i> 왼쪽에 아직 남은 것</span><span><i class="rr"></i> 오른쪽에 아직 남은 것</span></div><input type="range" id="labRange" min="0" max="0" value="0">
+<div class="ctl" style="margin:12px 0 0">
+<button id="labPlay" class="pri">▶ 재생</button>
+<button id="labPrev">◀ 이전</button>
+<button id="labNext">▶ 다음</button>
+<button id="labReset">↺ 처음으로</button>
+<label>속도 <select id="labSpeed"><option value="1200">아주 느리게</option><option value="700">느리게</option><option value="400" selected>보통</option><option value="200">빠르게</option></select></label>
+<span style="font-size:.82rem; color:var(--muted)">단계 <b id="labStep" style="color:var(--ink)"></b></span>
+</div>
+<div class="labfoot">
+<span class="labmsg" id="labMsg"></span>
+<span>비교 <b id="labC">0</b></span>
+<span>이동·교환 <b id="labM">0</b></span>
+</div>
+</div>
+<p style="margin-top:24px"><b>이렇게 해 보십시오.</b> 데이터를 <b>「이미 정렬됨」</b>으로 바꾸고 선택 정렬과 버블 정렬을 각각 돌려 보세요.
+선택 정렬은 비교 횟수가 그대로인데 버블 정렬은 첫 회차에서 멈춥니다. 그 까닭이 <code>swapped</code>입니다.</p>
+<h3 style="margin-top:34px">다섯 정렬을 같은 데이터로</h3>
+<p style="margin-top:8px">다섯 정렬을 모두 돌린 결과입니다. 지금 데이터는 <b id="cmpData"></b> 입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
+<div class="range"><div class="ttl">비교 횟수</div>
+<table id="cmpTable"><thead><tr><th>정렬</th><th>비교</th><th></th><th>이동·교환</th></tr></thead>
+<tbody id="cmpBody"></tbody></table></div>
+</section>
+
+<section class="algo" id="bigo"><div class="mark"><span class="num">01</span><h2>빅 오 다시 보기</h2></div><div class="idea"><p>방금 화면에서 <b>비교 횟수</b>가 세어졌습니다. 다섯 정렬 절마다 끝에 붙은 <b>「몇 번 비교하나」</b> 표도 같은 숫자입니다. 그 숫자를 읽는 데 빅 오가 쓰이니, 수업에서 배웠던 것을 여기서 다시 자세히 살펴봅시다.</p></div><h3 style="margin-top:34px">빅 오는 이렇게 만듭니다</h3><p style="margin-top:8px">세 단계입니다. 순서만 지키면 됩니다.</p><div class="range"><div class="ttl">연산 횟수 → 빅 오</div><table><tbody><tr><td>①</td><td>연산 횟수를 세어 n의 식으로 쓴다</td><td>3n² + 50n + 200</td></tr><tr><td>②</td><td><b>최고차항</b>만 남긴다</td><td>3n²</td></tr><tr><td>③</td><td><b>계수</b>를 지우고 O( ) 안에 넣는다</td><td><b>O(n²)</b></td></tr></tbody></table></div><p style="margin-top:16px">몇 개 더 해 보면 익숙해집니다.</p><div class="range"><div class="ttl">연습</div><table><tbody><tr><td>n(n-1)/2</td><td></td><td>먼저 풀면 n²/2 − n/2 입니다. 최고차항 n²/2 → 계수 1/2을 지우면 <b>O(n²)</b></td></tr><tr><td>3n + 5</td><td></td><td>최고차항 3n → 계수 3을 지우면 <b>O(n)</b></td></tr><tr><td>log<sub>2</sub>n + 1</td><td></td><td>최고차항 log<sub>2</sub>n → <b>O(log n)</b> (밑도 지웁니다. 까닭은 아래에)</td></tr><tr><td>2n log<sub>2</sub>n + 4n</td><td></td><td>최고차항 2n log<sub>2</sub>n → <b>O(n log n)</b></td></tr><tr><td>100</td><td></td><td>n이 없습니다. n이 커져도 100 그대로이므로 <b>O(1)</b></td></tr></tbody></table></div><h3 style="margin-top:34px">수학에서는 이렇게 정의합니다</h3>
 <p style="margin-top:8px">앞의 세 단계를 정리하면 다음과 같습니다.</p>
 <div class="bigo"><p class="q">어떤 상수 c 와 n<sub>0</sub> 가 있어서<br>n ≥ n<sub>0</sub> 인 모든 n 에서 f(n) ≤ c × g(n) 이면<br>f(n) 은 O(g(n)) 이다</p></div><div class="range"><div class="ttl">기호의 뜻</div><table><tbody><tr><td><b>f(n)</b></td><td></td><td>알고리즘의 수행 시간 함수</td></tr><tr><td><b>g(n)</b></td><td></td><td>비교 기준이 되는 함수</td></tr><tr><td><b>c</b></td><td></td><td>양의 상수</td></tr><tr><td><b>n<sub>0</sub></b></td><td></td><td>임계값</td></tr></tbody></table></div>
 <p style="margin-top:14px">말로 풀면 <b>“n이 충분히 커지면 f(n)은 g(n)의 몇 배를 넘지 않는다”</b>는 뜻입니다. 여기서 두 가지가 따라 나옵니다.</p>
@@ -294,7 +334,7 @@ while i &gt; 1:
     i = i // 2</td><td>O(log n)</td><td>반으로 나눌 때마다 한 번씩이므로 “반으로 몇 번 나누면 1이 되나” = log<sub>2</sub>n번입니다.</td></tr><tr><td>for i in range(100):
     ...</td><td>O(1)</td><td>100은 n과 상관없는 <b>고정된 수</b>입니다. n이 커져도 100번 그대로이므로 상수입니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">규칙은 두 개뿐입니다. <b>안에 들어가면 곱하기</b>, <b>나란히 있으면 더하기</b>입니다. 더한 다음에는 <b>최고차항</b>만 남깁니다.</p></div><div class="range"><div class="ttl">이 자료의 다섯 정렬은 어디에 해당하나</div><table><tbody><tr><td>선택 정렬</td><td>O(n²)</td><td>바깥 <code>for i</code> 안에 <code>for j</code>가 들어 있습니다. 두 겹이므로 n × n입니다.</td></tr><tr><td>버블 정렬</td><td>O(n²)</td><td>역시 두 겹입니다. 다만 <code>break</code> 덕분에 이미 정렬된 데이터에서는 한 겹만 돌고 끝나 O(n)이 됩니다.</td></tr><tr><td>삽입 정렬</td><td>O(n²)</td><td><code>for</code> 안에 <code>while</code>이 들어 있습니다. 반복문이면 <code>for</code>든 <code>while</code>이든 똑같이 셉니다.</td></tr><tr><td>병합 정렬</td><td>O(n log n)</td><td>반씩 나누므로 단계가 <b>log<sub>2</sub>n개</b>이고, 각 단계에서 n개를 훑습니다.</td></tr><tr><td>퀵 정렬</td><td>O(n log n)</td><td>같은 이유입니다. 다만 나눔이 한쪽으로 쏠리면 단계가 n개가 되어 O(n²)이 됩니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가운데 칸과 오른쪽 칸에서 <b>로그의 밑이 다르게 적혀 있습니다.</b> 잘못 쓴 것이 아닙니다. 가운데는 빅 오 <b>기호</b>라 밑을 적지 않고, 오른쪽은 <b>실제로 세는 횟수</b>라 밑이 2입니다. n = 8이면 단계가 정확히 log<sub>2</sub>8 = 3개입니다. 기호에서 왜 밑을 지우는지는 아래 「왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나」에서 설명합니다.</p></div><h3 style="margin-top:34px">여기서 세는 것은 초가 아니라 비교 횟수입니다</h3><p style="margin-top:8px">실제로 걸리는 시간은 <b>(비교 횟수) × (한 번 비교하는 데 걸리는 시간)</b>입니다. 뒤쪽은 컴퓨터마다 다르지만 n이 커져도 변하지 않습니다. 그래서 그 부분을 떼어 내면 앞쪽만 남습니다. <b>시간을 이야기하면서 횟수를 세는 이유가 이것입니다.</b></p><h3 style="margin-top:30px">log n 은 무엇인가</h3><p style="margin-top:8px"><b>“n을 몇 번 반으로 나누면 1이 되는가”</b>입니다. 8 → 4 → 2 → 1 이므로 <b>log<sub>2</sub>8 = 3</b>입니다. 1000은 열 번, 100만은 스무 번이면 1까지 갑니다. n이 1000배 커져도 log는 <b>10만큼</b> 늘어납니다. 그래서 <b>log가 붙은 값은 거의 커지지 않습니다.</b></p><h3 style="margin-top:30px">왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나</h3><p style="margin-top:8px">반으로 나누니까 밑은 분명히 2입니다. 그런데 <code>O(n log n)</code>이라고 쓸 때는 밑을 적지 않습니다.</p><p style="margin-top:12px">밑이 다른 로그끼리는 <b>항상 일정한 배수만큼</b> 차이 납니다. <b>log<sub>2</sub>n</b>은 log<sub>10</sub>n의 <b>언제나 3.32배</b>입니다. n이 8이든 100만이든 그 배수는 3.32로 변하지 않습니다.</p><div class="range"><div class="ttl">밑만 다른 로그의 값</div><table><tbody><tr><td>n = 8</td><td>log<sub>2</sub>n = 3</td><td>log<sub>10</sub>n = 0.90 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000</td><td>log<sub>2</sub>n = 10</td><td>log<sub>10</sub>n = 3 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000,000</td><td>log<sub>2</sub>n = 20</td><td>log<sub>10</sub>n = 6 &nbsp;→&nbsp; <b>3.32배</b></td></tr></tbody></table></div><p style="margin-top:14px">3.32는 <b>n이 커져도 변하지 않는 상수</b>입니다. 그리고 ③단계에서 상수는 지우기로 했지요. 그래서 밑도 함께 지웁니다. 밑이 2이든 10이든 <b>같은 O(log n)</b>입니다.</p><p style="margin-top:12px">다만 <b>실제로 횟수를 셀 때는 밑이 2입니다.</b> 반으로 나누니까요. 그래서 이 자료의 표에서는 <b>log<sub>2</sub>8 = 3</b>처럼 밑을 적었고, 빅 오 기호로 쓸 때만 <code>O(n log n)</code>으로 적습니다.</p><div class="callout"><p>병합 정렬과 퀵 정렬이 빠른 이유는 하나입니다. <b>한 단계에서 n개를 훑는 것은 다른 정렬과 같은데, 그 단계가 n번이 아니라 log<sub>2</sub>n번</b>이기 때문입니다. n = 100만이면 100만 번과 스무 번의 차이입니다.</p></div></section>
 <section class="algo" id="sel">
-<div class="mark"><span class="num">01</span><h2>선택 정렬</h2></div>
+<div class="mark"><span class="num">02</span><h2>선택 정렬</h2></div>
 <div class="idea"><p><b>남은 부분에서 가장 작은 값을 찾아 맨 앞의 값과 교환합니다.</b> 그다음에는 한 칸 오른쪽으로 옮겨 가며 같은 일을 되풀이합니다. 왼쪽은 자리가 확정된 부분이고, 오른쪽은 아직 확정되지 않은 부분입니다.</p></div>
 <div class="pseudo"><div class="ttl">의사 코드 — 선택 정렬</div><ol><li>ALGORITHM SelectionSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 0 TO n-2 DO</li><li>        min ← i</li><li>        FOR j ← i+1 TO n-1 DO</li><li>            IF A[j] &lt; A[min] THEN</li><li>                min ← j</li><li>        A[i] 와 A[min] 을 교환한다</li><li>    RETURN A</li></ol></div>
 <div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def selection_sort(A):</li><li>    n = len(A)</li><li>    for i in range(n - 1):</li><li>        m = i</li><li>        for j in range(i + 1, n):</li><li>            if A[j] &lt; A[m]:</li><li>                m = j</li><li>        A[i], A[m] = A[m], A[i]</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px">의사 코드와 <b>줄이 하나씩 그대로 맞습니다.</b> <code>FOR i ← 0 TO n-2</code> 가 <code>for i in range(n - 1)</code> 이 되는 곳 하나만 짚고 넘어가겠습니다. <code>range(n-1)</code> 은 0부터 n-2까지이므로 같은 말입니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def selection_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다. 여기서는 8입니다.</td></tr><tr><td>3</td><td>for i in range(n - 1):</td><td>i가 0부터 n-2까지 바뀝니다. <code>range(7)</code>은 0에서 6까지이고 <b>7은 포함하지 않습니다.</b></td></tr><tr><td>4</td><td>m = i</td><td>가장 작은 값이 있는 <b>인덱스</b>를 m에 담습니다. 값이 아니라 <b>자리</b>를 담는 것입니다.</td></tr><tr><td>5</td><td>for j in range(i + 1, n):</td><td>j가 i 다음 자리부터 마지막 자리까지 바뀝니다. A[i]는 이미 후보로 잡아 두었으니 건너뜁니다.</td></tr><tr><td>6</td><td>if A[j] &lt; A[m]:</td><td>지금 보는 값이 지금까지 가장 작던 값보다 작으면.</td></tr><tr><td>7</td><td>m = j</td><td>가장 작은 값의 <b>자리</b>를 j로 바꿉니다. 값은 아직 하나도 움직이지 않았습니다.</td></tr><tr><td>8</td><td>A[i], A[m] = A[m], A[i]</td><td>두 자리의 값을 한 번에 교환합니다. 파이썬은 <b>오른쪽을 먼저 다 읽은 뒤</b> 왼쪽에 넣으므로 임시 변수가 필요 없습니다.</td></tr><tr><td>9</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
@@ -327,7 +367,7 @@ while i &gt; 1:
 </div>
 </section>
 <section class="algo" id="bub">
-<div class="mark"><span class="num">02</span><h2>버블 정렬</h2></div>
+<div class="mark"><span class="num">03</span><h2>버블 정렬</h2></div>
 <div class="idea"><p><b>옆자리끼리 비교해 순서가 뒤바뀌어 있으면 교환합니다.</b> 한 회차가 끝나면 가장 큰 값이 맨 뒤로 밀려납니다. 그래서 다음 반복은 한 칸 덜 봐도 됩니다.</p></div>
 <div class="pseudo"><div class="ttl">의사 코드 — 버블 정렬</div><ol><li>ALGORITHM BubbleSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 0 TO n-2 DO</li><li>        swapped ← false</li><li>        FOR j ← 0 TO n-2-i DO</li><li>            IF A[j] &gt; A[j+1] THEN</li><li>                A[j] 와 A[j+1] 을 교환한다</li><li>                swapped ← true</li><li>        IF swapped = false THEN 멈춘다</li><li>    RETURN A</li></ol></div>
 <div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def bubble_sort(A):</li><li>    n = len(A)</li><li>    for i in range(n - 1):</li><li>        swapped = False</li><li>        for j in range(n - 1 - i):</li><li>            if A[j] &gt; A[j + 1]:</li><li>                A[j], A[j + 1] = A[j + 1], A[j]</li><li>                swapped = True</li><li>        if not swapped:</li><li>            break</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px"><code>range(n - 1 - i)</code> 는 0부터 n-2-i 까지입니다. 의사 코드의 <code>0 TO n-2-i</code> 와 같습니다.<br>교환은 <code>A[j], A[j + 1] = A[j + 1], A[j]</code> 한 줄이면 됩니다. 임시 변수가 필요 없습니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def bubble_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다.</td></tr><tr><td>3</td><td>for i in range(n - 1):</td><td>회차를 n-1번 되풀이합니다.</td></tr><tr><td>4</td><td>swapped = False</td><td>이번 회차에 교환이 있었는지 기억할 표시입니다. <b>매 회차가 시작될 때마다</b> False로 되돌립니다.</td></tr><tr><td>5</td><td>for j in range(n - 1 - i):</td><td>j가 0부터 n-2-i까지. <code>-1</code>은 A[j+1]을 함께 보기 때문이고, <code>-i</code>는 오른쪽 i칸이 이미 확정되었기 때문입니다.</td></tr><tr><td>6</td><td>if A[j] &gt; A[j + 1]:</td><td>이웃한 두 값의 순서가 뒤집혀 있으면.</td></tr><tr><td>7</td><td>A[j], A[j + 1] = A[j + 1], A[j]</td><td>두 값을 교환합니다.</td></tr><tr><td>8</td><td>swapped = True</td><td>교환이 일어났음을 표시해 둡니다.</td></tr><tr><td>9</td><td>if not swapped:</td><td>이번 회차에 교환이 <b>한 번도</b> 없었다면.</td></tr><tr><td>10</td><td>break</td><td>이미 정렬이 끝난 것이므로 바깥 반복을 빠져나옵니다.</td></tr><tr><td>11</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
@@ -356,7 +396,7 @@ while i &gt; 1:
 선택 정렬에는 없는 성질입니다.</p>
 </div>
 </section><section class="algo" id="ins">
-<div class="mark"><span class="num">03</span><h2>삽입 정렬</h2></div>
+<div class="mark"><span class="num">04</span><h2>삽입 정렬</h2></div>
 <div class="idea"><p><b>값을 하나 뽑아 손에 들고, 왼쪽의 정렬된 구역에 끼워 넣습니다.</b>
 카드를 손에 쥐고 정리하는 것과 같습니다. 앞의 둘과 다른 점이 하나 있습니다 —
 <b>자리를 교환하는 것이 아니라, 큰 값들을 한 칸씩 밀어내고 빈자리에 꽂습니다.</b></p></div>
@@ -431,7 +471,7 @@ while i &gt; 1:
 이미 정렬된 데이터를 넣으면 매 회차가 비교 한 번으로 끝나는 이유입니다. 그래서 최선이 O(n)입니다.</p>
 </div>
 </section><section class="algo" id="mer">
-<div class="mark"><span class="num">04</span><h2>병합 정렬</h2></div>
+<div class="mark"><span class="num">05</span><h2>병합 정렬</h2></div>
 <div class="idea"><p><b>반으로 나누고, 또 반으로 나눠 하나짜리가 될 때까지 갑니다.</b>
 하나짜리는 그 자체로 정렬된 것입니다. 거기서부터 <b>둘씩 짝지어 합치며</b> 올라옵니다.
 나눌 때는 아무 생각 없이 반으로 자르고, <b>일은 합칠 때 합니다.</b></p></div>
@@ -464,7 +504,7 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </div>
 </section>
 <section class="algo" id="qui">
-<div class="mark"><span class="num">05</span><h2>퀵 정렬</h2></div>
+<div class="mark"><span class="num">06</span><h2>퀵 정렬</h2></div>
 <div class="idea"><p><b>기준 하나를 골라 작은 것과 큰 것으로 나눕니다.</b>
 그리고 양쪽을 각각 같은 방법으로 정렬한 뒤 <b>그냥 이어 붙입니다.</b>
 병합과 정반대입니다 — 퀵은 <b>나눌 때 일하고, 합칠 때는 붙이기만</b> 합니다.</p></div>
@@ -498,60 +538,9 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </div>
 </section>
 
-<section class="algo" id="lab">
-<div class="mark"><span class="num">06</span><h2>정렬 시각화</h2></div>
-<p class="sum">위의 「몇 번 비교하나」 표는 제가 세어 둔 숫자입니다. 여기서는 직접 데이터를 넣고 돌려서 확인할 수 있습니다.</p>
-<div class="lab">
-<div class="ctl">
-<label>데이터
-<select id="labData">
-<option value="doc">이 자료의 데이터 (5 2 9 1 7 3 8 4)</option>
-<option value="rand">무작위</option>
-<option value="sorted">이미 정렬됨</option>
-<option value="rev">거꾸로 정렬됨</option>
-<option value="custom">직접 입력</option>
-</select></label>
-<label id="labNwrap">개수 <input id="labN" type="number" min="4" max="14" value="10"></label>
-<input id="labCustom" type="text" value="5 2 9 1 7 3 8 4" size="22" style="display:none">
-<label>정렬
-<select id="labAlgo">
-<option value="sel">선택 정렬</option>
-<option value="bub">버블 정렬</option>
-<option value="ins">삽입 정렬</option>
-<option value="mer">병합 정렬</option>
-<option value="qui">퀵 정렬</option>
-</select></label>
-</div>
-<div class="labkey" id="labKey"></div>
-<div id="labMg"></div>
-<div class="bars" id="labBars"></div>
-<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><div class="lableg" id="labLegMer" style="display:none"><span><i class="ml"></i> 나눈 왼쪽</span><span><i class="mr"></i> 나눈 오른쪽</span><span><i class="rl"></i> 왼쪽에 아직 남은 것</span><span><i class="rr"></i> 오른쪽에 아직 남은 것</span></div><input type="range" id="labRange" min="0" max="0" value="0">
-<div class="ctl" style="margin:12px 0 0">
-<button id="labPlay" class="pri">▶ 재생</button>
-<button id="labPrev">◀ 이전</button>
-<button id="labNext">▶ 다음</button>
-<button id="labReset">↺ 처음으로</button>
-<label>속도 <select id="labSpeed"><option value="1200">아주 느리게</option><option value="700">느리게</option><option value="400" selected>보통</option><option value="200">빠르게</option></select></label>
-<span style="font-size:.82rem; color:var(--muted)">단계 <b id="labStep" style="color:var(--ink)"></b></span>
-</div>
-<div class="labfoot">
-<span class="labmsg" id="labMsg"></span>
-<span>비교 <b id="labC">0</b></span>
-<span>이동·교환 <b id="labM">0</b></span>
-</div>
-</div>
-<p style="margin-top:24px"><b>이렇게 해 보십시오.</b> 데이터를 <b>「이미 정렬됨」</b>으로 바꾸고 선택 정렬과 버블 정렬을 각각 돌려 보세요.
-선택 정렬은 비교 횟수가 그대로인데 버블 정렬은 첫 회차에서 멈춥니다. 그 까닭이 <code>swapped</code>입니다.</p>
-<h3 style="margin-top:34px">다섯 정렬을 같은 데이터로</h3>
-<p style="margin-top:8px">다섯 정렬을 모두 돌린 결과입니다. 지금 데이터는 <b id="cmpData"></b> 입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
-<div class="range"><div class="ttl">비교 횟수</div>
-<table id="cmpTable"><thead><tr><th>정렬</th><th>비교</th><th></th><th>이동·교환</th></tr></thead>
-<tbody id="cmpBody"></tbody></table></div>
-</section>
-
 <section class="algo" id="quiz">
 <div class="mark"><span class="num">07</span><h2>반복문 보고 빅 오 맞히기</h2></div>
-<p class="sum">00절의 표를 가리고 해 보십시오. 반복문이 몇 겹인지, 나란히 있는지 안에 들어 있는지만 보면 됩니다.</p>
+<p class="sum">01절의 표를 가리고 해 보십시오. 반복문이 몇 겹인지, 나란히 있는지 안에 들어 있는지만 보면 됩니다.</p>
 <div class="lab">
 <div class="ctl" style="margin-bottom:12px">
 <span style="font-size:.82rem; color:var(--muted)">문제 <b id="qNum" style="color:var(--ink)"></b></span>
