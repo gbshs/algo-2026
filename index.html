@@ -7,7 +7,7 @@
   --paper:#F3F2EF; --surface:#FFFFFF; --ink:#1A1917; --muted:#6C6A64;
   --line:#DBD8D1; --line-soft:#EAE8E2;
   --fixed:#1750C4; --fixed-bg:#1750C4; --fixed-line:#1750C4; --fixed-fg:#FFFFFF;
-  --active:#1750C4; --active-bg:#FFFFFF; --active-line:#1750C4;
+  --active:#1750C4; --active-bg:#FFFFFF; --active-line:#1750C4; --warm:#B4451E;
   --shadow:0 1px 2px rgba(26,25,23,.07), 0 10px 28px rgba(26,25,23,.05);
 }
 @media (prefers-color-scheme: dark){
@@ -15,7 +15,7 @@
     --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
     --line:#38352F; --line-soft:#2B2926;
     --fixed:#86B4FF; --fixed-bg:#86B4FF; --fixed-line:#86B4FF; --fixed-fg:#0E1A2B;
-    --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+    --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF; --warm:#F0A177;
     --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
   }
 }
@@ -23,7 +23,7 @@
   --paper:#191816; --surface:#232220; --ink:#EFEDE7; --muted:#9C998F;
   --line:#38352F; --line-soft:#2B2926;
   --fixed:#86B4FF; --fixed-bg:#86B4FF; --fixed-line:#86B4FF; --fixed-fg:#0E1A2B;
-  --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF;
+  --active:#86B4FF; --active-bg:#232220; --active-line:#86B4FF; --warm:#F0A177;
   --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 28px rgba(0,0,0,.35);
 }
 
@@ -189,13 +189,27 @@ sub{font-size:.7em; line-height:0; vertical-align:-.25em; letter-spacing:0}
   font-size:.76rem; font-weight:700; color:var(--muted); padding-bottom:3px}
 .bar.fix{background:var(--fixed-bg); border-color:var(--fixed-line); color:var(--fixed-fg)}
 .bar.seg{border-color:var(--active); border-width:2px}
+.mg{display:flex; flex-wrap:wrap; gap:6px 22px; margin:2px 0 8px; font-size:.84rem}
+.mg div{display:flex; align-items:baseline; gap:8px}
+.mg i{font-style:normal; color:var(--muted); font-size:.78rem}
+.mg i.tl{color:var(--active)} .mg i.tr{color:var(--warm)}
+.mg b{font-variant-numeric:tabular-nums; letter-spacing:.08em}
 .bar.srt{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active)}
+.bar.segl{background:color-mix(in srgb, var(--active) 30%, var(--surface)); border-color:var(--active)}
+.bar.segr{background:color-mix(in srgb, var(--warm) 26%, var(--surface)); border-color:var(--warm)}
+.bar.cut{border-left:3px solid var(--ink)}
+.bar.reml{border-color:var(--active); border-width:2px}
+.bar.remr{border-color:var(--warm); border-width:2px}
 .lableg{display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:10px; font-size:.78rem; color:var(--muted)}
 .lableg span{display:flex; align-items:center; gap:6px}
 .lableg i{width:14px; height:14px; border-radius:4px; border:1px solid var(--line); background:var(--line-soft)}
 .lableg i.f{background:var(--fixed-bg); border-color:var(--fixed-line)}
 .lableg i.c{background:var(--active); border-color:var(--active)}
 .lableg i.s{background:color-mix(in srgb, var(--active) 20%, var(--surface)); border-color:var(--active)}
+.lableg i.ml{background:color-mix(in srgb, var(--active) 30%, var(--surface)); border-color:var(--active)}
+.lableg i.mr{background:color-mix(in srgb, var(--warm) 26%, var(--surface)); border-color:var(--warm)}
+.lableg i.rl{background:none; border:2px solid var(--active)}
+.lableg i.rr{background:none; border:2px solid var(--warm)}
 .bar.cmp{background:var(--active); border-color:var(--active); color:#fff}
 :root:not([data-theme="light"]) .bar.cmp, :root[data-theme="dark"] .bar.cmp{color:#0E1A2B}
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .bar.cmp{color:#fff}}
@@ -210,12 +224,6 @@ input[type=range]{width:100%; margin:8px 0 0; accent-color:var(--active)}
 .mini{height:9px; background:var(--active); border-radius:5px}
 #cmpTable td:first-child{font-weight:700; color:var(--blue); white-space:nowrap; width:1%}
 #cmpTable td:nth-child(3){width:55%}
-.fill select,.fill input{font:inherit; font-size:.86rem; padding:4px 7px; border:1px solid var(--line);
-  border-radius:6px; background:var(--paper); color:var(--ink); width:100%; max-width:80px}
-.fill select.good,.fill input.good{border-color:#1a7f4b; background:rgba(26,127,75,.09)}
-.fill select.bad,.fill input.bad{border-color:#c0392b; background:rgba(192,57,43,.09)}
-.fmsg{margin-top:12px; font-size:.9rem; font-weight:600; min-height:1.3em}
-.fmsg.good{color:#1a7f4b} .fmsg.bad{color:#c0392b}
 #qCode{white-space:pre; font-family:"Gothic A1", monospace; font-size:.87rem; line-height:1.65;
   background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:0 0 14px;
   overflow-x:auto}
@@ -247,7 +255,7 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <header class="top">
 <div class="eyebrow">알고리즘 설계 · 3블록</div>
 <h1>정렬 보충 자료</h1>
-<p class="lede">선택 · 버블 · 삽입 · 병합 · 퀵 정렬을 <b>같은 데이터 하나</b>로 비교해 보겠습니다. 정렬마다 끝에 「몇 번 비교하나」 표를 붙여 두었으니, 수업에서 배운 <b>빅 오</b>를 먼저 짧게 정리하고 시작합니다.</p>
+<p class="lede">선택 · 버블 · 삽입 · 병합 · 퀵 정렬을 <b>같은 데이터 하나</b>로 비교해 보겠습니다. 정렬마다 끝에 「몇 번 비교하나」 표를 붙여 두었으니, 수업에서 배웠던 <b>빅 오</b>를 먼저 다시 자세히 살펴봅시다.</p>
 <div class="block"><h3>여기서 쓰는 숫자</h3><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div></div>
 <div class="legend">
   <div><span class="key f"></span> 자리가 확정된 값</div>
@@ -262,30 +270,29 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <li><a href="#ins">삽입 정렬</a></li>
 <li><a href="#mer">병합 정렬</a></li>
 <li><a href="#qui">퀵 정렬</a></li>
-<li><a href="#lab">직접 돌려 보기</a></li>
-<li><a href="#fill">추적 표 채우기</a></li>
+<li><a href="#lab">정렬 시각화</a></li>
 <li><a href="#quiz">빅 오 맞히기</a></li>
 </ul></nav>
-<section class="algo" id="bigo"><div class="mark"><span class="num">00</span><h2>빅 오 다시 보기</h2></div><div class="idea"><p>다섯 정렬 절마다 끝에 <b>「몇 번 비교하나」</b> 표를 붙여 두었습니다. 그 표를 읽는 데 빅 오가 쓰이니, 수업에서 배운 것을 먼저 짧게 정리하고 가겠습니다.</p></div><h3 style="margin-top:34px">빅 오는 이렇게 만듭니다</h3><p style="margin-top:8px">세 단계입니다. 순서만 지키면 됩니다.</p><div class="range"><div class="ttl">연산 횟수 → 빅 오</div><table><tbody><tr><td>①</td><td>연산 횟수를 세어 n의 식으로 쓴다</td><td>3n² + 50n + 200</td></tr><tr><td>②</td><td><b>최고차항</b>만 남긴다</td><td>3n²</td></tr><tr><td>③</td><td><b>계수</b>를 지우고 O( ) 안에 넣는다</td><td><b>O(n²)</b></td></tr></tbody></table></div><p style="margin-top:16px">몇 개 더 해 보면 좀 익숙해질 겁니다.</p><div class="range"><div class="ttl">연습</div><table><tbody><tr><td>n(n-1)/2</td><td></td><td>먼저 풀면 n²/2 − n/2 입니다. 최고차항 n²/2 → 계수 1/2을 지우면 <b>O(n²)</b></td></tr><tr><td>3n + 5</td><td></td><td>최고차항 3n → 계수 3을 지우면 <b>O(n)</b></td></tr><tr><td>log<sub>2</sub>n + 1</td><td></td><td>최고차항 log<sub>2</sub>n → <b>O(log n)</b> (밑도 지웁니다. 까닭은 아래에)</td></tr><tr><td>2n log<sub>2</sub>n + 4n</td><td></td><td>최고차항 2n log<sub>2</sub>n → <b>O(n log n)</b></td></tr><tr><td>100</td><td></td><td>n이 없습니다. n이 커져도 100 그대로이므로 <b>O(1)</b></td></tr></tbody></table></div><h3 style="margin-top:34px">그런데 정의는 따로 있습니다</h3>
-<p style="margin-top:8px">앞의 세 단계는 빅 오를 <b>구하는 방법</b>입니다. 정의는 다음과 같습니다.</p>
-<div class="bigo"><p class="q">어떤 상수 c 와 n<sub>0</sub> 가 있어서<br>n ≥ n<sub>0</sub> 인 모든 n 에서 f(n) ≤ c × g(n) 이면<br>f(n) 은 O(g(n)) 이다</p><p style="text-align:center; color:var(--muted); font-size:.88rem; margin-top:10px">f(n) 은 실제로 세어 본 연산 횟수, g(n) 은 n² 이나 n log n 같은 <b>간단한 식</b>입니다.</p></div>
+<section class="algo" id="bigo"><div class="mark"><span class="num">00</span><h2>빅 오 다시 보기</h2></div><div class="idea"><p>다섯 정렬 절마다 끝에 <b>「몇 번 비교하나」</b> 표를 붙여 두었습니다. 그 표를 읽는 데 빅 오가 쓰이니, 수업에서 배웠던 것을 여기서 다시 자세히 살펴봅시다.</p></div><h3 style="margin-top:34px">빅 오는 이렇게 만듭니다</h3><p style="margin-top:8px">세 단계입니다. 순서만 지키면 됩니다.</p><div class="range"><div class="ttl">연산 횟수 → 빅 오</div><table><tbody><tr><td>①</td><td>연산 횟수를 세어 n의 식으로 쓴다</td><td>3n² + 50n + 200</td></tr><tr><td>②</td><td><b>최고차항</b>만 남긴다</td><td>3n²</td></tr><tr><td>③</td><td><b>계수</b>를 지우고 O( ) 안에 넣는다</td><td><b>O(n²)</b></td></tr></tbody></table></div><p style="margin-top:16px">몇 개 더 해 보면 익숙해집니다.</p><div class="range"><div class="ttl">연습</div><table><tbody><tr><td>n(n-1)/2</td><td></td><td>먼저 풀면 n²/2 − n/2 입니다. 최고차항 n²/2 → 계수 1/2을 지우면 <b>O(n²)</b></td></tr><tr><td>3n + 5</td><td></td><td>최고차항 3n → 계수 3을 지우면 <b>O(n)</b></td></tr><tr><td>log<sub>2</sub>n + 1</td><td></td><td>최고차항 log<sub>2</sub>n → <b>O(log n)</b> (밑도 지웁니다. 까닭은 아래에)</td></tr><tr><td>2n log<sub>2</sub>n + 4n</td><td></td><td>최고차항 2n log<sub>2</sub>n → <b>O(n log n)</b></td></tr><tr><td>100</td><td></td><td>n이 없습니다. n이 커져도 100 그대로이므로 <b>O(1)</b></td></tr></tbody></table></div><h3 style="margin-top:34px">수학에서는 이렇게 정의합니다</h3>
+<p style="margin-top:8px">앞의 세 단계를 정리하면 다음과 같습니다.</p>
+<div class="bigo"><p class="q">어떤 상수 c 와 n<sub>0</sub> 가 있어서<br>n ≥ n<sub>0</sub> 인 모든 n 에서 f(n) ≤ c × g(n) 이면<br>f(n) 은 O(g(n)) 이다</p></div><div class="range"><div class="ttl">기호의 뜻</div><table><tbody><tr><td><b>f(n)</b></td><td></td><td>알고리즘의 수행 시간 함수</td></tr><tr><td><b>g(n)</b></td><td></td><td>비교 기준이 되는 함수</td></tr><tr><td><b>c</b></td><td></td><td>양의 상수</td></tr><tr><td><b>n<sub>0</sub></b></td><td></td><td>임계값</td></tr></tbody></table></div>
 <p style="margin-top:14px">말로 풀면 <b>“n이 충분히 커지면 f(n)은 g(n)의 몇 배를 넘지 않는다”</b>는 뜻입니다. 여기서 두 가지가 따라 나옵니다.</p>
 <p style="margin-top:8px">첫째, 빅 오는 <b>상한</b>입니다. <b>이보다 나빠지지는 않는다</b>는 약속이지, 정확히 이만큼 걸린다는 뜻이 아닙니다. 뒤에 나올 병합 정렬에서 “8 × 3 = 24번이 상한”이라고 말하는 것이 바로 이 뜻입니다.</p>
-<p style="margin-top:8px">둘째, 앞의 <b>②③단계가 왜 정당한지</b>가 이 부등식 안에 들어 있습니다.</p>
-<div class="range"><div class="ttl">정의에 들어 있는 두 장치</div><table><tbody><tr><td>c<br><span style="font-weight:400">몇 배까지 봐주는가</span></td><td></td><td>상수배는 따지지 않겠다는 뜻입니다. <code>5n</code>이든 <code>100n</code>이든 c를 넉넉히 잡으면 부등식이 성립합니다. 그래서 <b>계수를 지우는 ③단계</b>가 정당해집니다.</td></tr><tr><td>n<sub>0</sub><br><span style="font-weight:400">어디서부터 보는가</span></td><td></td><td>n이 작을 때 벌어지는 일은 따지지 않겠다는 뜻입니다. n이 커지면 묻혀 버리는 <b>낮은 항을 지우는 ②단계</b>가 그래서 정당해집니다.</td></tr></tbody></table></div>
-<h3 style="margin-top:34px">왜 최고차항만 남기고 계수를 지우나</h3><p style="margin-top:8px"><b>계수부터 봅시다.</b> 연산 횟수가 <code>5n</code>인 알고리즘에서 n을 2배로 하면 <code>10n ÷ 5n = 2</code>, 곧 2배입니다. <code>100n</code>이어도 답은 똑같이 2배입니다. <b>5나 100은 계산에서 약분되어 사라집니다.</b> 무시하는 것이 아니라 답에 나타나지 않는 것입니다.</p><p style="margin-top:14px"><b>낮은 항은</b> n이 커지면 저절로 작아집니다. <code>3n² + 50n + 200</code>에서 n = 2,000이면 3n²가 전체의 <b>99%가 넘습니다.</b> 나머지를 통째로 지워도 오차가 1%도 안 됩니다. 그래서 최고차항만 남깁니다.</p><h3 style="margin-top:34px">그래서 무엇을 말하려는 것인가</h3><p style="margin-top:8px">빅 오는 <b>시간</b>이 아닙니다. <code>O(n²)</code>는 “n의 제곱 초가 걸린다”는 뜻이 아니에요. 컴퓨터마다 속도가 다르니 초로는 말할 수 없습니다. 빅 오가 말하는 것은 <b>늘어나는 모양</b>입니다.</p><div class="bigo"><p class="q">데이터를 2배로 늘리면<br>일은 몇 배가 되는가?</p><p style="text-align:center; color:var(--muted); font-size:.88rem; margin-top:10px">빅 오의 의미를 잘 담은 질문입니다.</p></div><div class="range"><div class="ttl">데이터를 2배로 늘리면 일은 몇 배가 되나</div><table><tbody><tr><td>O(n)</td><td>2배</td><td>데이터가 늘어난 만큼 일도 그대로 늘어납니다.<br><b>버블 정렬 · 삽입 정렬</b> — 이미 정렬된 데이터가 들어왔을 때</td></tr><tr><td>O(n log n)</td><td>2배보다 조금 더</td><td>n배에 아주 조금만 얹힌 정도입니다.<br><b>병합 정렬 · 퀵 정렬</b> — 어떤 데이터가 들어와도</td></tr><tr><td>O(n²)</td><td>4배</td><td>데이터가 10배가 되면 일은 100배가 됩니다.<br><b>선택 정렬</b> — 어떤 데이터가 들어와도<br><b>버블 정렬 · 삽입 정렬</b> — 거꾸로 정렬된 데이터가 들어왔을 때</td></tr></tbody></table><p class="note" style="padding:14px 18px 0"><b>주의</b> — 여기서 “몇 배”는 <b>늘리기 전과 후를 비교한 것</b>입니다. n과 n²을 비교한 것이 아닙니다. n = 10이면 일이 100이고 n = 20이면 400이므로, 400 ÷ 100 = <b>4배</b>입니다. n = 3일 때도 9 → 36이니 역시 <b>4배</b>입니다. <b>n이 무엇이든 답은 같습니다.</b></p><p class="note" style="padding:0 18px 0">n 자리에 2n을 넣어 보면 바로 보입니다. <code>2n = 2 × n</code> 이므로 <b>2배</b>, <code>(2n)² = 2² × n² = 4 × n²</code> 이므로 <b>4배</b>입니다. 지수가 그대로 2의 거듭제곱으로 나옵니다. <code>O(n³)</code>이라면 <code>(2n)³ = 8 × n³</code>, 곧 <b>8배</b>이지요.</p><p class="note" style="padding:0 18px 16px">이 방법은 <code>n</code>, <code>n²</code>처럼 <b>다항식일 때만 깔끔하게 맞습니다.</b> <code>O(log n)</code>은 2배로 해도 몇 배가 되는 것이 아니라 <b>1만큼 늘어나고</b>, <code>O(n log n)</code>도 정확한 배수가 아니라 n에 따라 조금씩 달라집니다. 그래서 이것은 <b>감을 잡는 방법</b>이지 정의가 아닙니다. 정의는 앞에서 본 부등식입니다.</p></div><h3 style="margin-top:34px">반복문을 보고 빅 오 읽기</h3><p style="margin-top:8px">이제 코드에서 ①단계의 식을 세우는 방법입니다. <b>반복문이 몇 겹인지</b>만 보면 됩니다.</p><div class="range pat"><div class="ttl">반복문을 보고 빅 오 읽기</div><table><tbody><tr><td>a = A[0]
+<p style="margin-top:8px">둘째, 정의를 다시 보십시오. <b>“어떤 상수 <code>c</code> 와 <code>n<sub>0</sub></code> 가 <u>있어서</u>”</b> 라고 되어 있습니다. <code>c</code>와 <code>n<sub>0</sub></code>가 얼마인지는 <b>정해 주지 않습니다.</b> 부등식이 성립하는 값이 <b>하나라도 있으면</b> 그것으로 충분하다는 뜻입니다.</p><p style="margin-top:12px">그래서 <code>100n</code>이 <code>O(n)</code>인지 보이려면, <b><code>O( )</code> 안의 <code>n</code>이 <code>g(n)</code></b>이므로 부등식은 <code>100n ≤ c × n</code>이 됩니다. <code>c</code>에 <b>100을 대입해 보면</b> <code>100n ≤ 100 × n</code>, 성립하지요. <b>지운 계수가 <code>c</code> 자리로 옮겨간 셈</b>입니다(<b>③단계</b>).</p><p style="margin-top:12px">낮은 항도 마찬가지입니다. 이번에는 <code>n² + 50n</code>이 <code>O(n²)</code>인지 봅시다. <code>g(n)</code>이 <code>n²</code>이므로 부등식은 <code>n² + 50n ≤ c × n²</code>입니다. <code>c</code>에 <b>2</b>, <code>n<sub>0</sub></code>에 <b>50</b>을 대입해 보면 <code>n ≥ 50</code>에서 성립합니다(<b>②단계</b>). <code>c</code>를 51로 크게 잡으면 <code>n<sub>0</sub></code>가 1이어도 성립합니다. 되는 값이 하나만 있으면 되니 <b><code>c</code>와 <code>n<sub>0</sub></code>가 유일할 필요는 없습니다.</b></p>
+
+<h3 style="margin-top:34px">왜 최고차항만 남기고 계수를 지우나</h3><p style="margin-top:8px"><b>계수부터 봅시다.</b> 연산 횟수가 <code>5n</code>인 알고리즘에서 n을 2배로 하면 <code>10n ÷ 5n = 2</code>, 곧 2배입니다. <code>100n</code>이어도 답은 똑같이 2배입니다. <b>5나 100은 계산에서 약분되어 사라집니다.</b> 무시하는 것이 아니라 답에 나타나지 않는 것입니다.</p><p style="margin-top:14px"><b>낮은 항은</b> n이 커지면 저절로 작아집니다. <code>3n² + 50n + 200</code>에서 n = 2,000이면 3n²가 전체의 <b>99%가 넘습니다.</b> 나머지를 통째로 지워도 오차가 1%도 안 됩니다. 그래서 최고차항만 남깁니다.</p><h3 style="margin-top:34px">그래서 무엇을 말하려는 것인가</h3><p style="margin-top:8px">빅 오는 <b>시간</b>이 아닙니다. <code>O(n²)</code>는 “n의 제곱 초가 걸린다”는 뜻이 아닙니다. 컴퓨터마다 속도가 다르니 초로는 말할 수 없습니다. 빅 오가 말하는 것은 <b>늘어나는 모양</b>입니다.</p><div class="bigo"><p class="q">데이터를 2배로 늘리면<br>일은 몇 배가 되는가?</p><p style="text-align:center; color:var(--muted); font-size:.88rem; margin-top:10px">빅 오의 의미를 잘 담은 질문입니다.</p></div><div class="range"><div class="ttl">데이터를 2배로 늘리면 일은 몇 배가 되나</div><table><tbody><tr><td>O(n)</td><td>2배</td><td>데이터가 늘어난 만큼 일도 그대로 늘어납니다.<br><b>버블 정렬 · 삽입 정렬</b> — 이미 정렬된 데이터가 들어왔을 때</td></tr><tr><td>O(n log n)</td><td>2배보다 조금 더</td><td>n배에 아주 조금만 얹힌 정도입니다.<br><b>병합 정렬 · 퀵 정렬</b> — 어떤 데이터가 들어와도</td></tr><tr><td>O(n²)</td><td>4배</td><td>데이터가 10배가 되면 일은 100배가 됩니다.<br><b>선택 정렬</b> — 어떤 데이터가 들어와도<br><b>버블 정렬 · 삽입 정렬</b> — 거꾸로 정렬된 데이터가 들어왔을 때</td></tr></tbody></table><p class="note" style="padding:14px 18px 0"><b>주의</b> — 여기서 “몇 배”는 <b>늘리기 전과 후를 비교한 것</b>입니다. n과 n²을 비교한 것이 아닙니다. n = 10이면 일이 100이고 n = 20이면 400이므로, 400 ÷ 100 = <b>4배</b>입니다. n = 3일 때도 9 → 36이니 역시 <b>4배</b>입니다. <b>n이 무엇이든 답은 같습니다.</b></p><p class="note" style="padding:0 18px 0">n 자리에 2n을 넣어 보면 바로 보입니다. <code>2n = 2 × n</code> 이므로 <b>2배</b>, <code>(2n)² = 2² × n² = 4 × n²</code> 이므로 <b>4배</b>입니다. 지수가 그대로 2의 거듭제곱으로 나옵니다. <code>O(n³)</code>이라면 <code>(2n)³ = 8 × n³</code>, 곧 <b>8배</b>이지요.</p><p class="note" style="padding:0 18px 16px">이 방법은 <code>n</code>, <code>n²</code>처럼 <b>다항식일 때만 깔끔하게 맞습니다.</b> <code>O(log n)</code>은 2배로 해도 몇 배가 되는 것이 아니라 <b>1만큼 늘어나고</b>, <code>O(n log n)</code>도 정확한 배수가 아니라 n에 따라 조금씩 달라집니다. 그래서 이것은 <b>감을 잡는 방법</b>이지 정의가 아닙니다. 정의는 앞에서 본 부등식입니다.</p></div><h3 style="margin-top:34px">반복문을 보고 빅 오 읽기</h3><p style="margin-top:8px">이제 코드에서 ①단계의 식을 세우는 방법입니다. <b>반복문이 몇 겹인지</b>만 보면 됩니다.</p><div class="range pat"><div class="ttl">반복문을 보고 빅 오 읽기</div><table><tbody><tr><td>a = A[0]
 b = A[1]</td><td>O(1)</td><td>반복문이 없습니다. 리스트가 아무리 길어도 하는 일이 그대로입니다.</td></tr><tr><td>for i in range(n):
     ...</td><td>O(n)</td><td>n번 돕니다. 한 겹입니다.</td></tr><tr><td>for i in range(n):
     for j in range(n):
         ...</td><td>O(n²)</td><td>안쪽이 바깥의 <b>안에</b> 있으므로 n × n = n²번입니다.</td></tr><tr><td>for i in range(n):
     for j in range(i):
-        ...</td><td>O(n²)</td><td>삼각형 모양이라 n(n-1)/2번, 곧 <b>절반</b>입니다. 그런데 1/2은 상수라 지우므로 <b>여전히 O(n²)</b>입니다.</td></tr><tr><td>for i in range(n):
+        ...</td><td>O(n²)</td><td>안쪽이 <code>range(i)</code> 라 도는 횟수가 0번, 1번, 2번… 으로 늘어납니다. 다 더하면 <b>n(n-1)/2</b>, 곧 n × n 의 <b>절반</b>입니다. 그런데 1/2 은 상수라 지우므로 <b>여전히 O(n²)</b>입니다.</td></tr><tr><td>for i in range(n):
     ...
 for j in range(n):
     ...</td><td>O(n)</td><td>나란히 있으므로 n + n = 2n번입니다. 2는 상수라 지웁니다. <b>중첩이 아니면 곱해지지 않습니다.</b></td></tr><tr><td>i = n
 while i &gt; 1:
     i = i // 2</td><td>O(log n)</td><td>반으로 나눌 때마다 한 번씩이므로 “반으로 몇 번 나누면 1이 되나” = log<sub>2</sub>n번입니다.</td></tr><tr><td>for i in range(100):
-    ...</td><td>O(1)</td><td>100은 n과 상관없는 <b>고정된 수</b>입니다. n이 커져도 100번 그대로이므로 상수입니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">규칙은 두 개뿐입니다. <b>안에 들어가면 곱하기</b>, <b>나란히 있으면 더하기</b>입니다. 더한 다음에는 <b>최고차항</b>만 남깁니다.</p></div><div class="range"><div class="ttl">이 자료의 다섯 정렬은 어디에 해당하나</div><table><tbody><tr><td>선택 정렬</td><td>O(n²)</td><td>바깥 <code>for i</code> 안에 <code>for j</code>가 들어 있습니다. 두 겹이므로 n × n입니다.</td></tr><tr><td>버블 정렬</td><td>O(n²)</td><td>역시 두 겹입니다. 다만 <code>break</code> 덕분에 이미 정렬된 데이터에서는 한 겹만 돌고 끝나 O(n)이 됩니다.</td></tr><tr><td>삽입 정렬</td><td>O(n²)</td><td><code>for</code> 안에 <code>while</code>이 들어 있습니다. 반복문이면 <code>for</code>든 <code>while</code>이든 똑같이 셉니다.</td></tr><tr><td>병합 정렬</td><td>O(n log n)</td><td>반씩 나누므로 단계가 <b>log<sub>2</sub>n개</b>이고, 각 단계에서 n개를 훑습니다.</td></tr><tr><td>퀵 정렬</td><td>O(n log n)</td><td>같은 이유입니다. 다만 나눔이 한쪽으로 쏠리면 단계가 n개가 되어 O(n²)이 됩니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가운데 칸과 오른쪽 칸에서 <b>로그의 밑이 다르게 적혀 있습니다.</b> 잘못 쓴 것이 아닙니다. 가운데는 빅 오 <b>기호</b>라 밑을 적지 않고, 오른쪽은 <b>실제로 세는 횟수</b>라 밑이 2입니다. n = 8이면 단계가 정확히 log<sub>2</sub>8 = 3개입니다. 기호에서 왜 밑을 지우는지는 아래 「왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나」에서 설명합니다.</p></div><h3 style="margin-top:34px">여기서 세는 것은 초가 아니라 비교 횟수입니다</h3><p style="margin-top:8px">실제로 걸리는 시간은 <b>(비교 횟수) × (한 번 비교하는 데 걸리는 시간)</b>입니다. 뒤쪽은 컴퓨터마다 다르지만 n이 커져도 변하지 않습니다. 그래서 그 부분을 떼어 내면 앞쪽만 남습니다. <b>시간을 이야기하면서 횟수를 세는 이유가 이것입니다.</b></p><h3 style="margin-top:30px">log n 은 무엇인가</h3><p style="margin-top:8px"><b>“n을 몇 번 반으로 나누면 1이 되는가”</b>입니다. 8 → 4 → 2 → 1 이므로 <b>log<sub>2</sub>8 = 3</b>입니다. 1000은 열 번, 100만은 스무 번이면 1까지 갑니다. n이 1000배 커져도 log는 10만 늘어납니다. 그래서 <b>log가 붙으면 거의 커지지 않습니다.</b></p><h3 style="margin-top:30px">왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나</h3><p style="margin-top:8px">반으로 나누니까 밑은 분명히 2입니다. 그런데 <code>O(n log n)</code>이라고 쓸 때는 밑을 적지 않습니다.</p><p style="margin-top:12px">밑이 다른 로그끼리는 <b>항상 일정한 배수만큼</b> 차이 납니다. <b>log<sub>2</sub>n</b>은 log<sub>10</sub>n의 <b>언제나 3.32배</b>입니다. n이 8이든 100만이든 그 배수는 3.32로 변하지 않습니다.</p><div class="range"><div class="ttl">밑만 다른 로그의 값</div><table><tbody><tr><td>n = 8</td><td>log<sub>2</sub>n = 3</td><td>log<sub>10</sub>n = 0.90 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000</td><td>log<sub>2</sub>n = 10</td><td>log<sub>10</sub>n = 3 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000,000</td><td>log<sub>2</sub>n = 20</td><td>log<sub>10</sub>n = 6 &nbsp;→&nbsp; <b>3.32배</b></td></tr></tbody></table></div><p style="margin-top:14px">3.32는 <b>n이 커져도 변하지 않는 상수</b>입니다. 그리고 ③단계에서 상수는 지우기로 했지요. 그래서 밑도 함께 지웁니다. 밑이 2이든 10이든 <b>같은 O(log n)</b>입니다.</p><p style="margin-top:12px">다만 <b>실제로 횟수를 셀 때는 밑이 2입니다.</b> 반으로 나누니까요. 그래서 이 자료의 표에서는 <b>log<sub>2</sub>8 = 3</b>처럼 밑을 적었고, 빅 오 기호로 쓸 때만 <code>O(n log n)</code>으로 적습니다.</p><div class="callout"><p>병합 정렬과 퀵 정렬이 빠른 이유는 하나입니다. <b>한 단계에서 n개를 훑는 것은 다른 정렬과 같은데, 그 단계가 n번이 아니라 log<sub>2</sub>n번</b>이기 때문입니다. n = 100만이면 100만 번과 스무 번의 차이입니다.</p></div></section>
+    ...</td><td>O(1)</td><td>100은 n과 상관없는 <b>고정된 수</b>입니다. n이 커져도 100번 그대로이므로 상수입니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">규칙은 두 개뿐입니다. <b>안에 들어가면 곱하기</b>, <b>나란히 있으면 더하기</b>입니다. 더한 다음에는 <b>최고차항</b>만 남깁니다.</p></div><div class="range"><div class="ttl">이 자료의 다섯 정렬은 어디에 해당하나</div><table><tbody><tr><td>선택 정렬</td><td>O(n²)</td><td>바깥 <code>for i</code> 안에 <code>for j</code>가 들어 있습니다. 두 겹이므로 n × n입니다.</td></tr><tr><td>버블 정렬</td><td>O(n²)</td><td>역시 두 겹입니다. 다만 <code>break</code> 덕분에 이미 정렬된 데이터에서는 한 겹만 돌고 끝나 O(n)이 됩니다.</td></tr><tr><td>삽입 정렬</td><td>O(n²)</td><td><code>for</code> 안에 <code>while</code>이 들어 있습니다. 반복문이면 <code>for</code>든 <code>while</code>이든 똑같이 셉니다.</td></tr><tr><td>병합 정렬</td><td>O(n log n)</td><td>반씩 나누므로 단계가 <b>log<sub>2</sub>n개</b>이고, 각 단계에서 n개를 훑습니다.</td></tr><tr><td>퀵 정렬</td><td>O(n log n)</td><td>같은 이유입니다. 다만 나눔이 한쪽으로 쏠리면 단계가 n개가 되어 O(n²)이 됩니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가운데 칸과 오른쪽 칸에서 <b>로그의 밑이 다르게 적혀 있습니다.</b> 잘못 쓴 것이 아닙니다. 가운데는 빅 오 <b>기호</b>라 밑을 적지 않고, 오른쪽은 <b>실제로 세는 횟수</b>라 밑이 2입니다. n = 8이면 단계가 정확히 log<sub>2</sub>8 = 3개입니다. 기호에서 왜 밑을 지우는지는 아래 「왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나」에서 설명합니다.</p></div><h3 style="margin-top:34px">여기서 세는 것은 초가 아니라 비교 횟수입니다</h3><p style="margin-top:8px">실제로 걸리는 시간은 <b>(비교 횟수) × (한 번 비교하는 데 걸리는 시간)</b>입니다. 뒤쪽은 컴퓨터마다 다르지만 n이 커져도 변하지 않습니다. 그래서 그 부분을 떼어 내면 앞쪽만 남습니다. <b>시간을 이야기하면서 횟수를 세는 이유가 이것입니다.</b></p><h3 style="margin-top:30px">log n 은 무엇인가</h3><p style="margin-top:8px"><b>“n을 몇 번 반으로 나누면 1이 되는가”</b>입니다. 8 → 4 → 2 → 1 이므로 <b>log<sub>2</sub>8 = 3</b>입니다. 1000은 열 번, 100만은 스무 번이면 1까지 갑니다. n이 1000배 커져도 log는 <b>10만큼</b> 늘어납니다. 그래서 <b>log가 붙은 값은 거의 커지지 않습니다.</b></p><h3 style="margin-top:30px">왜 log<sub>2</sub>n 이 아니라 log n 이라고 쓰나</h3><p style="margin-top:8px">반으로 나누니까 밑은 분명히 2입니다. 그런데 <code>O(n log n)</code>이라고 쓸 때는 밑을 적지 않습니다.</p><p style="margin-top:12px">밑이 다른 로그끼리는 <b>항상 일정한 배수만큼</b> 차이 납니다. <b>log<sub>2</sub>n</b>은 log<sub>10</sub>n의 <b>언제나 3.32배</b>입니다. n이 8이든 100만이든 그 배수는 3.32로 변하지 않습니다.</p><div class="range"><div class="ttl">밑만 다른 로그의 값</div><table><tbody><tr><td>n = 8</td><td>log<sub>2</sub>n = 3</td><td>log<sub>10</sub>n = 0.90 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000</td><td>log<sub>2</sub>n = 10</td><td>log<sub>10</sub>n = 3 &nbsp;→&nbsp; <b>3.32배</b></td></tr><tr><td>n = 1,000,000</td><td>log<sub>2</sub>n = 20</td><td>log<sub>10</sub>n = 6 &nbsp;→&nbsp; <b>3.32배</b></td></tr></tbody></table></div><p style="margin-top:14px">3.32는 <b>n이 커져도 변하지 않는 상수</b>입니다. 그리고 ③단계에서 상수는 지우기로 했지요. 그래서 밑도 함께 지웁니다. 밑이 2이든 10이든 <b>같은 O(log n)</b>입니다.</p><p style="margin-top:12px">다만 <b>실제로 횟수를 셀 때는 밑이 2입니다.</b> 반으로 나누니까요. 그래서 이 자료의 표에서는 <b>log<sub>2</sub>8 = 3</b>처럼 밑을 적었고, 빅 오 기호로 쓸 때만 <code>O(n log n)</code>으로 적습니다.</p><div class="callout"><p>병합 정렬과 퀵 정렬이 빠른 이유는 하나입니다. <b>한 단계에서 n개를 훑는 것은 다른 정렬과 같은데, 그 단계가 n번이 아니라 log<sub>2</sub>n번</b>이기 때문입니다. n = 100만이면 100만 번과 스무 번의 차이입니다.</p></div></section>
 <section class="algo" id="sel">
 <div class="mark"><span class="num">01</span><h2>선택 정렬</h2></div>
 <div class="idea"><p><b>남은 부분에서 가장 작은 값을 찾아 맨 앞의 값과 교환합니다.</b> 그다음에는 한 칸 오른쪽으로 옮겨 가며 같은 일을 되풀이합니다. 왼쪽은 자리가 확정된 부분이고, 오른쪽은 아직 확정되지 않은 부분입니다.</p></div>
@@ -355,7 +362,7 @@ while i &gt; 1:
 <b>자리를 교환하는 것이 아니라, 큰 값들을 한 칸씩 밀어내고 빈자리에 꽂습니다.</b></p></div>
 <div class="pseudo"><div class="ttl">의사 코드 — 삽입 정렬</div><ol><li>ALGORITHM InsertionSort(A[0..n-1])</li><li>    n ← A의 길이</li><li>    FOR i ← 1 TO n-1 DO</li><li>        key ← A[i]</li><li>        j ← i - 1</li><li>        WHILE j &gt;= 0 AND A[j] &gt; key DO</li><li>            A[j+1] ← A[j]</li><li>            j ← j - 1</li><li>        A[j+1] ← key</li><li>    RETURN A</li></ol></div>
 <div class="pseudo"><div class="ttl">파이썬으로 옮기면</div><ol><li>def insertion_sort(A):</li><li>    n = len(A)</li><li>    for i in range(1, n):</li><li>        key = A[i]</li><li>        j = i - 1</li><li>        while j &gt;= 0 and A[j] &gt; key:</li><li>            A[j + 1] = A[j]</li><li>            j -= 1</li><li>        A[j + 1] = key</li><li>    return A</li></ol><p class="note" style="padding:0 18px 16px"><code>while j >= 0 and A[j] > key:</code> 에서 <b>왼쪽 조건이 먼저 검사됩니다.</b> 그래서 <code>j</code> 가 -1이 되면 <code>A[j]</code> 를 아예 읽지 않고 빠져나옵니다. 순서를 바꿔 적으면 배열을 벗어납니다.</p></div><div class="range lines"><div class="ttl">코드를 한 줄씩 읽으면</div><table><tbody><tr><td>1</td><td>def insertion_sort(A):</td><td>리스트 A를 받는 함수를 만듭니다.</td></tr><tr><td>2</td><td>n = len(A)</td><td>리스트의 길이를 n에 담습니다.</td></tr><tr><td>3</td><td>for i in range(1, n):</td><td><b>1부터</b> 시작합니다. A[0] 한 칸은 그것만 놓고 보면 이미 정렬된 상태이기 때문입니다.</td></tr><tr><td>4</td><td>key = A[i]</td><td>뽑아 든 값을 따로 담아 둡니다. 7행에서 이 자리가 덮어써지므로 <b>미리 빼 두지 않으면 값을 잃어버립니다.</b></td></tr><tr><td>5</td><td>j = i - 1</td><td>바로 왼쪽 자리부터 봅니다.</td></tr><tr><td>6</td><td>while j &gt;= 0 and A[j] &gt; key:</td><td>조건이 둘입니다. <code>A[j] &gt; key</code>는 <b>언제 멈출지</b>를, <code>j &gt;= 0</code>은 <b>어디까지 갈 수 있는지</b>를 정합니다.</td></tr><tr><td>7</td><td>A[j + 1] = A[j]</td><td>값을 한 칸 오른쪽으로 밉니다. 이때 같은 값이 잠깐 두 번 보이지만, 원래 값은 key에 들어 있으니 잃어버리지 않습니다.</td></tr><tr><td>8</td><td>j -= 1</td><td>한 칸 더 왼쪽을 봅니다.</td></tr><tr><td>9</td><td>A[j + 1] = key</td><td>비워진 자리에 손에 든 값을 내려놓습니다. j가 이미 한 칸 더 갔으므로 빈자리는 그 <b>오른쪽</b>입니다.</td></tr><tr><td>10</td><td>return A</td><td>정렬된 리스트를 돌려줍니다.</td></tr></tbody></table></div>
-<div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 1 TO n-1</td><td><b>0 번부터가 아니라 1 번부터</b> 시작합니다. 맨 앞 한 칸은 그 자체로 정렬된 것으로 보기 때문입니다. 마지막 값까지 모두 끼워 넣어야 하므로 끝은 n-1 입니다.</td></tr><tr><td>안쪽 WHILE</td><td>j &gt;= 0 AND A[j] &gt; key</td><td><b>범위가 아니라 조건입니다.</b> <code>j &gt;= 0</code> 은 왼쪽 끝을 넘어가지 않게 막고, <code>A[j] &gt; key</code> 는 알맞은 자리를 만나면 멈추게 합니다. 앞의 두 정렬과 달리, <b>반복의 횟수가 정해져 있지 않습니다.</b></td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가장 작은 값이 들어오면 왼쪽 끝까지 가므로, <code>j &gt;= 0</code> 이 없으면 배열을 벗어나게 됩니다.</p></div>
+<div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 1 TO n-1</td><td><b>0 번부터가 아니라 1 번부터</b> 시작합니다. 맨 앞 한 칸은 그 자체로 정렬된 것으로 보기 때문입니다. 마지막 값까지 모두 끼워 넣어야 하므로 끝은 n-1 입니다.</td></tr><tr><td>안쪽 WHILE</td><td>j &gt;= 0 AND A[j] &gt; key</td><td><b>조건 두 개가 범위를 정합니다.</b> <code>j &gt;= 0</code> 은 <b>어디까지 갈 수 있는지</b>를 — 인덱스가 0보다 작아질 수 없습니다 — <code>A[j] &gt; key</code> 는 <b>언제 멈출지</b>를 정합니다. 앞의 두 정렬과 달리 <b>반복 횟수가 미리 정해져 있지 않아서</b>, 범위를 숫자로 적지 못하고 조건으로 적는 것입니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">가장 작은 값이 들어오면 왼쪽 끝까지 가므로, <code>j &gt;= 0</code> 이 없으면 배열을 벗어나게 됩니다.</p></div>
 <div class="range" style="margin-top:22px; border-left:4px solid var(--active); border-radius:0 10px 10px 0">
 <div class="ttl">정리 — 반복의 범위는 무엇을 보고 정하나</div>
 <table><tbody>
@@ -492,7 +499,7 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </section>
 
 <section class="algo" id="lab">
-<div class="mark"><span class="num">06</span><h2>직접 돌려 보기</h2></div>
+<div class="mark"><span class="num">06</span><h2>정렬 시각화</h2></div>
 <p class="sum">위의 「몇 번 비교하나」 표는 제가 세어 둔 숫자입니다. 여기서는 직접 데이터를 넣고 돌려서 확인할 수 있습니다.</p>
 <div class="lab">
 <div class="ctl">
@@ -516,8 +523,9 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </select></label>
 </div>
 <div class="labkey" id="labKey"></div>
+<div id="labMg"></div>
 <div class="bars" id="labBars"></div>
-<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><input type="range" id="labRange" min="0" max="0" value="0">
+<div class="lableg"><span><i class="f"></i> 자리가 확정된 값</span><span><i class="c"></i> 지금 비교하는 값</span><span><i class="s"></i> 정렬이 끝난 조각 <span style="opacity:.7">(병합 정렬)</span></span><span><i></i> 아직 확정되지 않은 값</span></div><div class="lableg" id="labLegMer" style="display:none"><span><i class="ml"></i> 나눈 왼쪽</span><span><i class="mr"></i> 나눈 오른쪽</span><span><i class="rl"></i> 왼쪽에 아직 남은 것</span><span><i class="rr"></i> 오른쪽에 아직 남은 것</span></div><input type="range" id="labRange" min="0" max="0" value="0">
 <div class="ctl" style="margin:12px 0 0">
 <button id="labPlay" class="pri">▶ 재생</button>
 <button id="labPrev">◀ 이전</button>
@@ -535,29 +543,14 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 <p style="margin-top:24px"><b>이렇게 해 보십시오.</b> 데이터를 <b>「이미 정렬됨」</b>으로 바꾸고 선택 정렬과 버블 정렬을 각각 돌려 보세요.
 선택 정렬은 비교 횟수가 그대로인데 버블 정렬은 첫 회차에서 멈춥니다. 그 까닭이 <code>swapped</code>입니다.</p>
 <h3 style="margin-top:34px">다섯 정렬을 같은 데이터로</h3>
-<p style="margin-top:8px">지금 고른 데이터 <b id="cmpData"></b> 로 다섯 정렬을 모두 돌린 결과입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
+<p style="margin-top:8px">다섯 정렬을 모두 돌린 결과입니다. 지금 데이터는 <b id="cmpData"></b> 입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
 <div class="range"><div class="ttl">비교 횟수</div>
 <table id="cmpTable"><thead><tr><th>정렬</th><th>비교</th><th></th><th>이동·교환</th></tr></thead>
 <tbody id="cmpBody"></tbody></table></div>
 </section>
 
-<section class="algo" id="fill">
-<div class="mark"><span class="num">07</span><h2>추적 표 채우기</h2></div>
-<p class="sum">선택 정렬의 <b>첫 회차</b>를 표로 따라가는 연습입니다. 새 문제를 누를 때마다 데이터가 바뀝니다.</p>
-<div class="lab fill">
-<p style="font-size:.9rem; margin-bottom:12px">데이터 <b id="fillArr" style="color:var(--active)"></b> · <code>i = 0</code>, <code>min</code>은 0에서 시작합니다.</p>
-<div class="scroll"><table><thead id="fillHead"></thead><tbody id="fillBody"></tbody></table></div>
-<div class="ctl" style="margin:16px 0 0">
-<button id="fillCheck" class="pri">확인</button>
-<button id="fillShow">정답 보기</button>
-<button id="fillNew">새 문제</button>
-</div>
-<div class="fmsg" id="fillMsg"></div>
-</div>
-</section>
-
 <section class="algo" id="quiz">
-<div class="mark"><span class="num">08</span><h2>반복문 보고 빅 오 맞히기</h2></div>
+<div class="mark"><span class="num">07</span><h2>반복문 보고 빅 오 맞히기</h2></div>
 <p class="sum">00절의 표를 가리고 해 보십시오. 반복문이 몇 겹인지, 나란히 있는지 안에 들어 있는지만 보면 됩니다.</p>
 <div class="lab">
 <div class="ctl" style="margin-bottom:12px">
@@ -574,8 +567,7 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 </div>
 </section>
 <footer>
-<p>모든 숫자와 단계는 수업에서 쓴 코드를 그대로 실행해 얻은 것입니다.
-쓰인 데이터는 <code>5 2 9 1 7 3 8 4</code> 하나입니다.</p>
+<p>복습하느라 수고 많았습니다. 파이팅! 싸랑해요❤️</p>
 </footer>
 </div>
 <script>
@@ -583,9 +575,16 @@ n을 몇 번 반으로 나누면 1이 되는가 — 그것이 <b>log<sub>2</sub>
 'use strict';
 // ── 기록기: 각 정렬을 돌리며 프레임을 남긴다 ──────────────
 function mk(A0){ return {A:A0.slice(), F:[], c:0, m:0}; }
+// 숫자 뒤 조사는 읽는 소리로 정한다: 1=일(받침 ㄹ) → 을 / 2=이 → 를
+var JBAT=[true,true,false,true,false,false,true,true,true,false];  // 영 일 이 삼 사 오 육 칠 팔 구
+function jo(num, withBat, noBat){
+  var d = Math.abs(num) % 10;
+  var bat = (Math.abs(num) >= 10 && d === 0) ? true : JBAT[d];   // 10=십, 20=이십 … 받침 있음
+  return bat ? withBat : noBat;
+}
 function snap(S, o){
   var f = {arr:S.A.slice(), c:S.c, m:S.m, cmp:null, act:null,
-           fixL:S.fixL||0, fixR:S.fixR||0, seg:null, key:null, msg:'',
+           fixL:S.fixL||0, fixR:S.fixR||0, seg:null, segL:null, segR:null, cut:null, remL:null, remR:null, mg:null, varr:null, srtv:null, key:null, msg:'',
            done:S.done?S.done.slice():null, srt:S.srt?S.srt.slice():null};
   for(var k in o) f[k]=o[k];
   S.F.push(f);
@@ -644,24 +643,54 @@ function recIns(a){
 function recMer(a){
   var S=mk(a), A=S.A, n=A.length;
   S.srt=[]; for(var z=0;z<n;z++) S.srt.push(0);
-  snap(S,{msg:'시작 — 아직 아무 조각도 합치지 않았습니다'});
+  snap(S,{msg:'시작 — 먼저 반으로 나누어 내려갑니다'});
   (function ms(lo,hi){
-    if(hi-lo<=1) return;
-    var mid=(lo+hi)>>1;
-    ms(lo,mid); ms(mid,hi);
-    var L=A.slice(lo,mid), R=A.slice(mid,hi), i=0,j=0,k=lo;
-    snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 두 조각을 합칩니다'});
-    while(i<L.length&&j<R.length){
-      S.c++; snap(S,{seg:[lo,hi-1],msg:'왼쪽 '+L[i]+' ≤ 오른쪽 '+R[j]+' ?'});
-      if(L[i]<=R[j]) A[k++]=L[i++]; else A[k++]=R[j++];
-      S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'A['+(k-1)+'] ← '+A[k-1]});
+    if(hi-lo<=1){
+      S.srt[lo]=1;
+      snap(S,{seg:[lo,lo],msg:'A['+lo+'] 하나만 남았습니다 — 하나짜리는 그 자체로 정렬된 조각입니다'});
+      return;
     }
-    while(i<L.length){ A[k++]=L[i++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 비교 없이 붙임'}); }
-    while(j<R.length){ A[k++]=R[j++]; S.m++; snap(S,{seg:[lo,hi-1],act:[k-1],msg:'남은 것을 비교 없이 붙임'}); }
-    for(var q=lo;q<hi;q++) S.srt[q]=1;
-    snap(S,{msg:'['+lo+'..'+(hi-1)+'] 조각이 정렬되었습니다'});
+    var mid=(lo+hi)>>1;
+    snap(S,{segL:[lo,mid-1], segR:[mid,hi-1], cut:mid,
+            msg:'['+lo+'..'+(hi-1)+'] 구간을 반으로 나눕니다 → ['+lo+'..'+(mid-1)+'] · ['+mid+'..'+(hi-1)+']'});
+    ms(lo,mid); ms(mid,hi);
+
+    var L=A.slice(lo,mid), R=A.slice(mid,hi), i=0, j=0, k=lo;
+    function fields(extra){
+      var vw=A.slice(), p=k, x, y, q;
+      for(x=i;x<L.length;x++) vw[p++]=L[x];
+      for(y=j;y<R.length;y++) vw[p++]=R[y];
+      var sv=S.srt.slice();
+      for(q=k;q<hi;q++) sv[q]=0;            // 아직 안 쓴 것은 회색으로 되돌린다
+      var lrem=L.length-i, rrem=R.length-j;
+      var o={varr:vw, srtv:sv,
+             remL: lrem ? [k, k+lrem-1] : null,
+             remR: rrem ? [k+lrem, hi-1] : null,
+             mg:{L:L.slice(i), R:R.slice(j), out:A.slice(lo,k)}};
+      for(q in extra) o[q]=extra[q];
+      return o;
+    }
+    snap(S, fields({msg:'정렬된 두 조각을 합칩니다 — ['+lo+'..'+(mid-1)+'] · ['+mid+'..'+(hi-1)+']'}));
+    while(i<L.length && j<R.length){
+      S.c++;
+      snap(S, fields({cmp:[k, k+(L.length-i)],
+                      msg:'맨 앞끼리 비교 — 왼쪽 '+L[i]+' ≤ 오른쪽 '+R[j]+' ?'}));
+      var fromL = L[i]<=R[j];
+      if(fromL) A[k++]=L[i++]; else A[k++]=R[j++];
+      S.m++;
+      snap(S, fields({act:[k-1],
+                      msg:(fromL?'왼쪽':'오른쪽')+'에서 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 꺼내 '+(k-1)+'번 자리에 놓습니다'}));
+    }
+    while(i<L.length){ A[k++]=L[i++]; S.m++;
+      snap(S, fields({act:[k-1], msg:'오른쪽이 비었습니다 — 왼쪽에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 붙입니다'})); }
+    while(j<R.length){ A[k++]=R[j++]; S.m++;
+      snap(S, fields({act:[k-1], msg:'왼쪽이 비었습니다 — 오른쪽에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 붙입니다'})); }
+
+    for(var q2=lo;q2<hi;q2++) S.srt[q2]=1;
+    snap(S,{seg:[lo,hi-1], msg:'['+lo+'..'+(hi-1)+'] 구간이 하나의 정렬된 조각이 되었습니다'});
   })(0,n);
-  S.fixL=n; snap(S,{msg:'끝'});
+  for(var z2=0;z2<n;z2++) S.srt[z2]=0;
+  S.fixL=n; snap(S,{msg:'끝 — 전체가 정렬되었습니다'});
   return S;
 }
 function recQui(a){
@@ -671,10 +700,10 @@ function recQui(a){
   (function qs(lo,hi){
     if(hi-lo<=1){ if(hi>lo){ S.done[lo]=1; snap(S,{msg:'A['+lo+'] 하나뿐 — 그대로 확정'}); } return; }
     var seg=A.slice(lo,hi), p=seg[seg.length>>1];
-    snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 기준 = '+p});
+    snap(S,{seg:[lo,hi-1],msg:'['+lo+'..'+(hi-1)+'] 구간의 기준 = '+p});
     var less=[],same=[],more=[];
     for(var t=0;t<seg.length;t++){
-      S.c++; snap(S,{seg:[lo,hi-1],cmp:[lo+t],msg:seg[t]+' 와 기준 '+p+' 비교'});
+      S.c++; snap(S,{seg:[lo,hi-1],cmp:[lo+t],msg:seg[t]+jo(seg[t],' 과',' 와')+' 기준 '+p+jo(p,' 을',' 를')+' 비교합니다'});
       if(seg[t]<p) less.push(seg[t]); else if(seg[t]>p) more.push(seg[t]); else same.push(seg[t]);
     }
     var out=less.concat(same,more);
@@ -704,23 +733,38 @@ function makeData(kind,n){
 }
 function build(){
   LAB.S = REC[LAB.algo](LAB.data);
+  $('labLegMer').style.display = (LAB.algo==='mer' ? 'flex' : 'none');
   LAB.k = 0; draw();
 }
 function draw(){
-  var S=LAB.S, f=S.F[LAB.k], mx=Math.max.apply(null,f.arr), html='';
-  for(var i=0;i<f.arr.length;i++){
+  var S=LAB.S, f=S.F[LAB.k], AR=f.varr||f.arr, SR=f.srtv||f.srt;
+  var mx=Math.max.apply(null,AR), html='';
+  for(var i=0;i<AR.length;i++){
     var cls='bar';
     if(f.fixL && i<f.fixL) cls+=' fix';
-    if(f.fixR && i>=f.arr.length-f.fixR) cls+=' fix';
-    if(f.srt && f.srt[i]) cls+=' srt';
+    if(f.fixR && i>=AR.length-f.fixR) cls+=' fix';
+    if(SR && SR[i]) cls+=' srt';
     if(f.done && f.done[i]) cls+=' fix';
     if(f.seg && i>=f.seg[0] && i<=f.seg[1]) cls+=' seg';
+    if(f.segL && i>=f.segL[0] && i<=f.segL[1]) cls+=' segl';
+    if(f.segR && i>=f.segR[0] && i<=f.segR[1]) cls+=' segr';
+    if(f.remL && i>=f.remL[0] && i<=f.remL[1]) cls+=' reml';
+    if(f.remR && i>=f.remR[0] && i<=f.remR[1]) cls+=' remr';
+    if(f.cut!==null && f.cut!==undefined && i===f.cut) cls+=' cut';
     if(f.cmp && f.cmp.indexOf(i)>=0) cls+=' cmp';
     if(f.act && f.act.indexOf(i)>=0) cls+=' act';
-    html+='<div class="'+cls+'" style="height:'+(18+72*f.arr[i]/mx)+'px"><span>'+f.arr[i]+'</span></div>';
+    html+='<div class="'+cls+'" style="height:'+(18+72*AR[i]/mx)+'px"><span>'+AR[i]+'</span></div>';
   }
   $('labBars').innerHTML=html;
   $('labKey').innerHTML = f.key!==null&&f.key!==undefined ? '손에 든 값 <b>'+f.key+'</b>' : '';
+  if(f.mg){
+    var mgh='<div class="mg">'
+      + '<div><i class="tl">왼쪽에 남은 것</i><b>'  + (f.mg.L.length?f.mg.L.join(' '):'—') + '</b></div>'
+      + '<div><i class="tr">오른쪽에 남은 것</i><b>' + (f.mg.R.length?f.mg.R.join(' '):'—') + '</b></div>'
+      + '<div><i>지금까지 만든 것</i><b>' + (f.mg.out.length?f.mg.out.join(' '):'—') + '</b></div>'
+      + '</div>';
+    $('labMg').innerHTML=mgh;
+  } else $('labMg').innerHTML='';
   $('labMsg').textContent=f.msg;
   $('labC').textContent=f.c; $('labM').textContent=f.m;
   $('labStep').textContent=(LAB.k+1)+' / '+S.F.length;
@@ -751,65 +795,13 @@ function compareAll(){
   $('cmpData').textContent='['+LAB.data.join(', ')+']';
 }
 
-// ── B. 추적 표 채우기 ─────────────────────────────────
-var FILL={arr:null, ans:null};
-function newFill(){
-  var a=makeData('rand',8);
-  FILL.arr=a;
-  var mi=0, rows=[];
-  rows.push({j:'시작', aj:'—', am:a[0], cond:'—', min:0});
-  for(var j=1;j<a.length;j++){
-    var ok = a[j]<a[mi];
-    var am = a[mi];
-    if(ok) mi=j;
-    rows.push({j:j, aj:a[j], am:am, cond: ok?'참':'거짓', min:mi});
-  }
-  FILL.ans=rows;
-  var h='<tr><th>j</th><th>A[j]</th><th>A[min]</th><th>A[j] &lt; A[min]</th><th>min</th></tr>';
-  var b='';
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i];
-    if(i===0){ b+='<tr><td>시작</td><td>—</td><td>'+r.am+'</td><td>—</td><td>0</td></tr>'; continue; }
-    b+='<tr><td>'+r.j+'</td><td>'+r.aj+'</td><td>'+r.am+'</td>'
-      +'<td><select data-i="'+i+'" data-f="cond"><option value=""></option><option>참</option><option>거짓</option></select></td>'
-      +'<td><input data-i="'+i+'" data-f="min" inputmode="numeric" size="2"></td></tr>';
-  }
-  document.getElementById('fillHead').innerHTML=h;
-  document.getElementById('fillBody').innerHTML=b;
-  document.getElementById('fillArr').textContent='['+a.join(', ')+']';
-  document.getElementById('fillMsg').textContent='';
-  document.getElementById('fillMsg').className='fmsg';
-}
-function checkFill(){
-  var els=document.querySelectorAll('#fillBody [data-i]'), ok=0, tot=0;
-  for(var k=0;k<els.length;k++){
-    var e=els[k], i=+e.getAttribute('data-i'), f=e.getAttribute('data-f');
-    var want=String(FILL.ans[i][f]), got=String(e.value).trim();
-    tot++;
-    e.classList.remove('good','bad');
-    if(got===want){ e.classList.add('good'); ok++; } else e.classList.add('bad');
-  }
-  var m=document.getElementById('fillMsg');
-  m.textContent = ok+' / '+tot + (ok===tot ? '  전부 맞았습니다.' : '  빨간 칸을 다시 보세요.');
-  m.className = 'fmsg ' + (ok===tot ? 'good' : 'bad');
-}
-function showFill(){
-  var els=document.querySelectorAll('#fillBody [data-i]');
-  for(var k=0;k<els.length;k++){
-    var e=els[k], i=+e.getAttribute('data-i'), f=e.getAttribute('data-f');
-    e.value=String(FILL.ans[i][f]); e.classList.remove('bad'); e.classList.add('good');
-  }
-  document.getElementById('fillMsg').textContent='정답을 채웠습니다.';
-  document.getElementById('fillMsg').className='fmsg';
-}
-
-// ── C. 반복문 → 빅 오 퀴즈 ────────────────────────────
+// ── B. 반복문 → 빅 오 퀴즈 ────────────────────────────
 var QB=[
  {code:'for i in range(n):\n    print(i)', a:'O(n)', why:'한 겹입니다. n번 돕니다.'},
  {code:'for i in range(n):\n    for j in range(n):\n        print(i, j)', a:'O(n²)', why:'안쪽이 바깥의 안에 있으므로 n × n 입니다.'},
- {code:'for i in range(n):\n    for j in range(i):\n        print(i, j)', a:'O(n²)', why:'삼각형이라 n(n-1)/2번이지만, 계수 1/2을 지우면 n² 입니다.'},
+ {code:'for i in range(n):\n    for j in range(i):\n        print(i, j)', a:'O(n²)', why:'안쪽이 range(i) 라 도는 횟수가 0번, 1번, 2번… 으로 늘어납니다. 다 더하면 n(n-1)/2, 곧 n × n 의 절반입니다. 1/2 은 상수라 지우므로 O(n²) 입니다.'},
  {code:'for i in range(n):\n    print(i)\nfor j in range(n):\n    print(j)', a:'O(n)', why:'나란히 있으므로 n + n = 2n. 계수 2를 지우면 n 입니다.'},
- {code:'i = n\nwhile i > 1:\n    i = i // 2\n    print(i)', a:'O(log n)', why:'반으로 나눌 때마다 한 번씩이므로 log₂n번입니다.'},
+ {code:'i = n\nwhile i > 1:\n    i = i // 2\n    print(i)', a:'O(log n)', why:'반으로 나눌 때마다 한 번씩이므로, 밑이 2인 log 곧 log n 번입니다.'},
  {code:'for i in range(100):\n    print(i)', a:'O(1)', why:'100은 n과 상관없는 고정된 수입니다.'},
  {code:'print(A[0])\nprint(A[len(A) - 1])', a:'O(1)', why:'반복문이 없습니다. 리스트가 길어져도 하는 일이 그대로입니다.'},
  {code:'for i in range(n):\n    j = n\n    while j > 1:\n        j = j // 2', a:'O(n log n)', why:'바깥 n번 안에 log n번이 들어 있으므로 n × log n 입니다.'},
@@ -882,10 +874,6 @@ window.addEventListener('DOMContentLoaded', function(){
   };
   LAB.speed=+$('labSpeed').value;
   reset();
-  newFill();
-  $('fillCheck').onclick=checkFill;
-  $('fillShow').onclick=showFill;
-  $('fillNew').onclick=newFill;
   newQuiz();
   $('qNext').onclick=nextQ;
   $('qAgain').onclick=newQuiz;
