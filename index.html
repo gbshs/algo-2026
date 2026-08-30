@@ -301,7 +301,7 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <div class="labfoot">
 <span class="labmsg" id="labMsg"></span>
 <span>비교 <b id="labC">0</b></span>
-<span>이동·교환 <b id="labM">0</b></span>
+
 </div>
 </div>
 <p style="margin-top:24px"><b>이렇게 해 보십시오.</b> 데이터를 <b>「이미 정렬됨」</b>으로 바꾸고 선택 정렬과 버블 정렬을 각각 돌려 보세요.
@@ -309,7 +309,7 @@ footer{padding:44px 0 0; color:var(--muted); font-size:.87rem}
 <h3 style="margin-top:34px">다섯 정렬을 같은 데이터로</h3>
 <p style="margin-top:8px">다섯 정렬을 모두 돌린 결과입니다. 지금 데이터는 <b id="cmpData"></b> 입니다. 데이터를 바꾸면 이 표도 함께 바뀝니다.</p>
 <div class="range"><div class="ttl">비교 횟수</div>
-<table id="cmpTable"><thead><tr><th>정렬</th><th>비교</th><th></th><th>이동·교환</th></tr></thead>
+<table id="cmpTable"><thead><tr><th>정렬</th><th>비교 횟수</th><th></th></tr></thead>
 <tbody id="cmpBody"></tbody></table></div>
 </section>
 
@@ -341,23 +341,23 @@ while i &gt; 1:
 <div class="range"><div class="ttl">반복의 범위는 왜 이렇게 정해졌나</div><table><tbody><tr><td>바깥 FOR</td><td>i ← 0 TO n-2</td><td>i 는 <b>지금 채울 자리</b>입니다. 앞에서부터 자리를 하나씩 확정해 나가는데, n-1개를 확정하면 <b>남은 하나는 저절로 제자리</b>입니다. 그래서 마지막 자리는 하지 않아도 됩니다.</td></tr><tr><td>안쪽 FOR</td><td>j ← i+1 TO n-1</td><td>j 는 <b>비교할 값의 자리</b>입니다. i 번은 이미 후보로 잡아 두었으니(min ← i) 그 다음 자리부터 끝까지 훑습니다.</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">바깥 반복은 <b>몇 번 되풀이할 것인가</b>를, 안쪽 반복은 <b>인덱스가 어디까지 갈 수 있는가</b>를 정하는 일입니다. 세 정렬을 다 본 뒤 삽입 정렬 끝에서 한 번에 정리합니다.</p></div>
 <div class="block"><h3>단계별로</h3><div class="scroll">
 <div class="step"><div class="lbl">시작</div><div class="code"><span><b>2행</b><em>n ← A의 길이</em></span></div><div class="body"><div class="row"><span class="cell">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">아직 자리가 확정된 값이 없습니다.</p></div></div>
-<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>1</b>. 1번 자리의 값과 교환합니다.</p></div></div>
-<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">가장 작은 값 <b>2</b>가 이미 2번 자리에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
-<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell">5</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>3</b>. 3번 자리의 값과 교환합니다.</p></div></div>
-<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">5</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>4</b>. 4번 자리의 값과 교환합니다.</p></div></div>
-<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed active">5</span><span class="cell">9</span><span class="cell">8</span><span class="cell">7</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>5</b>. 5번 자리의 값과 교환합니다.</p></div></div>
-<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell">8</span><span class="cell">9</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>7</b>. 6번 자리의 값과 교환합니다.</p></div></div>
-<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell">9</span></div><p class="note">가장 작은 값 <b>8</b>이 이미 7번 자리에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
+<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>1</b>. <b>인덱스 0</b>의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell">9</span><span class="cell">5</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">가장 작은 값 <b>2</b>가 이미 <b>인덱스 1</b>에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
+<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell">5</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>3</b>. <b>인덱스 2</b>의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell">7</span><span class="cell">9</span><span class="cell">8</span><span class="cell">5</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>4</b>. <b>인덱스 3</b>의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed active">5</span><span class="cell">9</span><span class="cell">8</span><span class="cell">7</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>5</b>. <b>인덱스 4</b>의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell">8</span><span class="cell">9</span></div><p class="note">남은 부분에서 가장 작은 값은 <b>7</b>. <b>인덱스 5</b>의 값과 교환합니다.</p></div></div>
+<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~7행</b><em>min ← i … min ← j</em><i>가장 작은 값의 자리를 찾는다</i></span><span><b>8행</b><em>A[i] 와 A[min] 을 교환한다</em></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell">9</span></div><p class="note">가장 작은 값 <b>8</b>이 이미 <b>인덱스 6</b>에 있어서 <b>자기 자신과 교환하게 됩니다.</b> 결과는 달라지지 않지만 비교는 그대로 다 합니다.</p></div></div>
 </div></div>
 <div class="block"><h3>추적 표</h3><div class="scroll"><table>
-<thead><tr><th>회차</th><th>남은 부분에서 가장 작은 값</th><th>교환한 자리</th><th>교환한 뒤</th><th>비교</th></tr></thead><tbody>
-<tr><td class="n">1</td><td class="n">1</td><td class="n">1번 ↔ 4번</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">7</td></tr>
-<tr><td class="n">2</td><td class="n">2</td><td class="n">2번 ↔ 자기 자신</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">6</td></tr>
-<tr><td class="n">3</td><td class="n">3</td><td class="n">3번 ↔ 6번</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">5</td></tr>
-<tr><td class="n">4</td><td class="n">4</td><td class="n">4번 ↔ 8번</td><td class="n">1 2 3 4 7 9 8 5</td><td class="n">4</td></tr>
-<tr><td class="n">5</td><td class="n">5</td><td class="n">5번 ↔ 8번</td><td class="n">1 2 3 4 5 9 8 7</td><td class="n">3</td></tr>
-<tr><td class="n">6</td><td class="n">7</td><td class="n">6번 ↔ 8번</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">2</td></tr>
-<tr><td class="n">7</td><td class="n">8</td><td class="n">7번 ↔ 자기 자신</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">1</td></tr>
+<thead><tr><th>회차</th><th>남은 부분에서 가장 작은 값</th><th>교환한 인덱스</th><th>교환한 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">1</td><td class="n">0 ↔ 3</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">7</td></tr>
+<tr><td class="n">2</td><td class="n">2</td><td class="n">1 ↔ 1 (자기 자신)</td><td class="n">1 2 9 5 7 3 8 4</td><td class="n">6</td></tr>
+<tr><td class="n">3</td><td class="n">3</td><td class="n">2 ↔ 5</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">5</td></tr>
+<tr><td class="n">4</td><td class="n">4</td><td class="n">3 ↔ 7</td><td class="n">1 2 3 4 7 9 8 5</td><td class="n">4</td></tr>
+<tr><td class="n">5</td><td class="n">5</td><td class="n">4 ↔ 7</td><td class="n">1 2 3 4 5 9 8 7</td><td class="n">3</td></tr>
+<tr><td class="n">6</td><td class="n">7</td><td class="n">5 ↔ 7</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">2</td></tr>
+<tr><td class="n">7</td><td class="n">8</td><td class="n">6 ↔ 6 (자기 자신)</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">1</td></tr>
 <tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td class="n"><b>28</b></td></tr>
 </tbody></table></div></div>
 <div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>28</td><td>7+6+5+4+3+2+1</td></tr><tr><td>이미 정렬된 데이터</td><td>28</td><td>똑같습니다</td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>역시 똑같습니다</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">어떤 데이터가 들어와도 <b>28번으로 같습니다.</b> 가장 작은 값을 찾으려면 남은 구간을 끝까지 다 봐야 하기 때문입니다. n개일 때는 (n-1)+(n-2)+⋯+1 = <b>n(n-1)/2</b>이고, n이 커지면 n²/2가 되므로 <b>O(n²)</b>입니다.</p></div><div class="callout">
@@ -381,12 +381,12 @@ while i &gt; 1:
 <div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4행</b><em>swapped ← false</em></span><span><b>5~8행</b><em>한 번도 교환하지 않음</em></span><span><b>9행</b><em>IF swapped = false THEN 멈춘다</em><i>여기서 멈춘다</i></span></div><div class="body"><div class="row"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell fixed">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">이번 회차 동안 <b>한 번도 교환하지 않았습니다.</b> 이미 다 정렬된 것이므로 여기서 멈춥니다.</p></div></div>
 </div></div>
 <div class="block"><h3>추적 표</h3><div class="scroll"><table>
-<thead><tr><th>회차</th><th>보는 범위</th><th>교환한 횟수</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
-<tr><td class="n">1</td><td class="n">1 ~ 7번</td><td class="n">6</td><td class="n">2 5 1 7 3 8 4 9</td><td class="n">7</td></tr>
-<tr><td class="n">2</td><td class="n">1 ~ 6번</td><td class="n">3</td><td class="n">2 1 5 3 7 4 8 9</td><td class="n">6</td></tr>
-<tr><td class="n">3</td><td class="n">1 ~ 5번</td><td class="n">3</td><td class="n">1 2 3 5 4 7 8 9</td><td class="n">5</td></tr>
-<tr><td class="n">4</td><td class="n">1 ~ 4번</td><td class="n">1</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">4</td></tr>
-<tr><td class="n">5</td><td class="n">1 ~ 3번</td><td class="n">0</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">3</td></tr>
+<thead><tr><th>회차</th><th>보는 인덱스</th><th>교환한 횟수</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">0 ~ 6</td><td class="n">6</td><td class="n">2 5 1 7 3 8 4 9</td><td class="n">7</td></tr>
+<tr><td class="n">2</td><td class="n">0 ~ 5</td><td class="n">3</td><td class="n">2 1 5 3 7 4 8 9</td><td class="n">6</td></tr>
+<tr><td class="n">3</td><td class="n">0 ~ 4</td><td class="n">3</td><td class="n">1 2 3 5 4 7 8 9</td><td class="n">5</td></tr>
+<tr><td class="n">4</td><td class="n">0 ~ 3</td><td class="n">1</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">4</td></tr>
+<tr><td class="n">5</td><td class="n">0 ~ 2</td><td class="n">0</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">3</td></tr>
 <tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td class="n"><b>25</b></td></tr>
 </tbody></table></div></div>
 <div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>25</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>7</td><td>첫 회차에서 교환이 없어 <code>break</code></td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>끝까지 다 돕니다</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">데이터에 따라 크게 달라집니다. 이미 정렬되어 있으면 <b>첫 회차 7번</b>만에 끝나므로 <b>O(n)</b>이고, 거꾸로 정렬되어 있으면 28번, 곧 <b>O(n²)</b>입니다. 이 차이를 만드는 것이 9~10행의 <code>swapped</code>입니다.</p></div><div class="callout">
@@ -445,23 +445,23 @@ while i &gt; 1:
 </div>
 <div class="block"><h3>일곱 회차 전체</h3><div class="scroll">
 <div class="step"><div class="lbl">시작</div><div class="code"><span><b>3행</b><em>FOR i ← 1 TO n-1 DO</em><i>i = 1 부터 시작</i></span></div><div class="body"><div class="row"><span class="cell fixed">5</span><span class="cell">2</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">맨 앞 한 칸은 그 자체로 정렬된 것으로 봅니다.</p></div></div>
-<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">2</span><span class="cell fixed">5</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>2</b> · 1칸 밀어냄 · 1번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>9</b> · 밀어낸 값 없음(이미 제자리) · 3번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">9</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>1</b> · 3칸 밀어냄 · 1번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell fixed">9</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>7</b> · 1칸 밀어냄 · 4번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>3</b> · 3칸 밀어냄 · 3번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed active">8</span><span class="cell fixed">9</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>8</b> · 1칸 밀어냄 · 6번 자리에 꽂음</p></div></div>
-<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">손에 든 값 <b>4</b> · 4칸 밀어냄 · 4번 자리에 꽂음</p></div></div>
+<div class="step"><div class="lbl">1회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">2</span><span class="cell fixed">5</span><span class="cell">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>2</b> · 1칸 밀어냄 · <b>인덱스 0</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">2회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">9</span><span class="cell">1</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>9</b> · 밀어낸 값 없음(이미 제자리) · <b>인덱스 2</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">3회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed active">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed">9</span><span class="cell">7</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>1</b> · 3칸 밀어냄 · <b>인덱스 0</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">4회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">5</span><span class="cell fixed active">7</span><span class="cell fixed">9</span><span class="cell">3</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>7</b> · 1칸 밀어냄 · <b>인덱스 3</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">5회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed active">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">9</span><span class="cell">8</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>3</b> · 3칸 밀어냄 · <b>인덱스 2</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">6회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed active">8</span><span class="cell fixed">9</span><span class="cell">4</span></div><p class="note">손에 든 값 <b>8</b> · 1칸 밀어냄 · <b>인덱스 5</b>에 꽂음</p></div></div>
+<div class="step"><div class="lbl">7회차</div><div class="code"><span><b>4~5행</b><em>key ← A[i] · j ← i - 1</em><i>값을 뽑아 든다</i></span><span><b>6~8행</b><em>A[j+1] ← A[j] · j ← j - 1</em><i>큰 값을 밀어낸다</i></span><span><b>9행</b><em>A[j+1] ← key</em><i>빈칸에 꽂는다</i></span></div><div class="body"><div class="row"><span class="cell fixed">1</span><span class="cell fixed">2</span><span class="cell fixed">3</span><span class="cell fixed active">4</span><span class="cell fixed">5</span><span class="cell fixed">7</span><span class="cell fixed">8</span><span class="cell fixed">9</span></div><p class="note">손에 든 값 <b>4</b> · 4칸 밀어냄 · <b>인덱스 3</b>에 꽂음</p></div></div>
 </div></div>
 <div class="block"><h3>추적 표</h3><div class="scroll"><table>
-<thead><tr><th>회차</th><th>손에 든 값</th><th>정렬된 구역</th><th>밀어낸 칸</th><th>꽂은 자리</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
-<tr><td class="n">1</td><td class="n">2</td><td class="n">5</td><td class="n">1</td><td class="n">1번</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
-<tr><td class="n">2</td><td class="n">9</td><td class="n">2 5</td><td class="n">0</td><td class="n">3번</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
-<tr><td class="n">3</td><td class="n">1</td><td class="n">2 5 9</td><td class="n">3</td><td class="n">1번</td><td class="n">1 2 5 9 7 3 8 4</td><td class="n">3</td></tr>
-<tr><td class="n">4</td><td class="n">7</td><td class="n">1 2 5 9</td><td class="n">1</td><td class="n">4번</td><td class="n">1 2 5 7 9 3 8 4</td><td class="n">2</td></tr>
-<tr><td class="n">5</td><td class="n">3</td><td class="n">1 2 5 7 9</td><td class="n">3</td><td class="n">3번</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">4</td></tr>
-<tr><td class="n">6</td><td class="n">8</td><td class="n">1 2 3 5 7 9</td><td class="n">1</td><td class="n">6번</td><td class="n">1 2 3 5 7 8 9 4</td><td class="n">2</td></tr>
-<tr><td class="n">7</td><td class="n">4</td><td class="n">1 2 3 5 7 8 9</td><td class="n">4</td><td class="n">4번</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">5</td></tr>
+<thead><tr><th>회차</th><th>손에 든 값</th><th>정렬된 구역</th><th>밀어낸 칸</th><th>꽂은 인덱스</th><th>회차가 끝난 뒤</th><th>비교</th></tr></thead><tbody>
+<tr><td class="n">1</td><td class="n">2</td><td class="n">5</td><td class="n">1</td><td class="n">0</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
+<tr><td class="n">2</td><td class="n">9</td><td class="n">2 5</td><td class="n">0</td><td class="n">2</td><td class="n">2 5 9 1 7 3 8 4</td><td class="n">1</td></tr>
+<tr><td class="n">3</td><td class="n">1</td><td class="n">2 5 9</td><td class="n">3</td><td class="n">0</td><td class="n">1 2 5 9 7 3 8 4</td><td class="n">3</td></tr>
+<tr><td class="n">4</td><td class="n">7</td><td class="n">1 2 5 9</td><td class="n">1</td><td class="n">3</td><td class="n">1 2 5 7 9 3 8 4</td><td class="n">2</td></tr>
+<tr><td class="n">5</td><td class="n">3</td><td class="n">1 2 5 7 9</td><td class="n">3</td><td class="n">2</td><td class="n">1 2 3 5 7 9 8 4</td><td class="n">4</td></tr>
+<tr><td class="n">6</td><td class="n">8</td><td class="n">1 2 3 5 7 9</td><td class="n">1</td><td class="n">5</td><td class="n">1 2 3 5 7 8 9 4</td><td class="n">2</td></tr>
+<tr><td class="n">7</td><td class="n">4</td><td class="n">1 2 3 5 7 8 9</td><td class="n">4</td><td class="n">3</td><td class="n">1 2 3 4 5 7 8 9</td><td class="n">5</td></tr>
 <tr><td class="n"><b>합</b></td><td></td><td></td><td></td><td></td><td></td><td class="n"><b>18</b></td></tr>
 </tbody></table></div></div>
 <div class="range cnt"><div class="ttl">몇 번 비교하나</div><table><tbody><tr><td>이 데이터 <b>5 2 9 1 7 3 8 4</b></td><td>18</td><td></td></tr><tr><td>이미 정렬된 데이터</td><td>7</td><td>회차마다 한 번만 비교하고 멈춤</td></tr><tr><td>거꾸로 정렬된 데이터</td><td>28</td><td>회차마다 끝까지 밀어야 함</td></tr></tbody></table><p class="note" style="padding:0 18px 16px">버블 정렬과 마찬가지로 최선이 <b>O(n)</b>, 최악이 <b>O(n²)</b>입니다. 다만 이 데이터에서 18번으로 버블 정렬의 25번보다 적습니다. <b>자리를 찾으면 바로 멈추기</b> 때문입니다.</p></div><div class="callout">
@@ -587,8 +587,11 @@ function recSel(a){
       S.c++; snap(S,{cmp:[j,mi],msg:'A['+j+'] < A['+mi+'] ?'});
       if(A[j]<A[mi]){ mi=j; snap(S,{act:[mi],msg:'min ← '+j}); }
     }
-    if(mi!==i){ var t=A[i];A[i]=A[mi];A[mi]=t; S.m++; snap(S,{swp:[i,mi],cmp:[i,mi],msg:'A['+i+'] ↔ A['+mi+'] 교환'}); }
-    else snap(S,{msg:'이미 제자리 — 교환 없음'});
+    // 코드는 min 이 그대로여도 교환 줄을 실행한다. 자기 자신과 교환하는 셈이다.
+    var t=A[i];A[i]=A[mi];A[mi]=t; S.m++;
+    snap(S,{swp:[i,mi],cmp:[i,mi],
+            msg: mi!==i ? 'A['+i+'] ↔ A['+mi+'] 교환'
+                        : 'A['+i+'] ↔ 자기 자신과 교환 — 자리는 그대로입니다'});
     S.fixL=i+1; snap(S,{msg:(i+1)+'회차 끝 — 왼쪽 '+(i+1)+'칸 확정'});
   }
   S.fixL=n; snap(S,{msg:'끝'});
@@ -668,17 +671,17 @@ function recMer(a){
     while(i<L.length && j<R.length){
       S.c++;
       snap(S, fields({cmp:[k, k+(L.length-i)],
-                      msg:'맨 앞끼리 비교 — 왼쪽 '+L[i]+' ≤ 오른쪽 '+R[j]+' ?'}));
+                      msg:'맨 앞끼리 비교 — L의 맨 앞 '+L[i]+' ≤ R의 맨 앞 '+R[j]+' ?'}));
       var fromL = L[i]<=R[j];
       if(fromL) A[k++]=L[i++]; else A[k++]=R[j++];
       S.m++;
       snap(S, fields({act:[k-1],
-                      msg:(fromL?'왼쪽':'오른쪽')+'에서 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 꺼내 '+(k-1)+'번 자리에 놓습니다'}));
+                      msg:(fromL?'왼쪽 L':'오른쪽 R')+'의 맨 앞 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 꺼내 out 에 붙입니다'}));
     }
     while(i<L.length){ A[k++]=L[i++]; S.m++;
-      snap(S, fields({act:[k-1], msg:'오른쪽이 비었습니다 — 왼쪽에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 붙입니다'})); }
+      snap(S, fields({act:[k-1], msg:'R 이 비었습니다 — L 에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 out 에 붙입니다'})); }
     while(j<R.length){ A[k++]=R[j++]; S.m++;
-      snap(S, fields({act:[k-1], msg:'왼쪽이 비었습니다 — 오른쪽에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 붙입니다'})); }
+      snap(S, fields({act:[k-1], msg:'L 이 비었습니다 — R 에 남은 '+A[k-1]+jo(A[k-1],' 을',' 를')+' 비교 없이 out 에 붙입니다'})); }
 
     for(var q2=lo;q2<hi;q2++) S.srt[q2]=1;
     snap(S,{seg:[lo,hi-1], msg:'['+lo+'..'+(hi-1)+'] 구간이 하나의 정렬된 조각이 되었습니다'});
@@ -703,7 +706,7 @@ function recQui(a){
     var out=less.concat(same,more);
     for(var u=0;u<out.length;u++){ A[lo+u]=out[u]; S.m++; }
     for(var q=lo+less.length;q<lo+less.length+same.length;q++) S.done[q]=1;
-    snap(S,{seg:[lo,hi-1],msg:'작은 것 '+less.length+'개 · 같은 것 '+same.length+'개 · 큰 것 '+more.length+'개로 나눔 — 기준 '+p+'의 자리가 확정되었습니다'});
+    snap(S,{seg:[lo,hi-1],msg:'less '+less.length+'개 · same '+same.length+'개 · more '+more.length+'개로 나눕니다 — 기준 '+p+' 의 자리가 확정되었습니다'});
     qs(lo, lo+less.length);
     qs(lo+less.length+same.length, hi);
   })(0,n);
@@ -753,14 +756,14 @@ function draw(){
   $('labKey').innerHTML = f.key!==null&&f.key!==undefined ? '손에 든 값 <b>'+f.key+'</b>' : '';
   if(f.mg){
     var mgh='<div class="mg">'
-      + '<div><i class="tl">왼쪽에 남은 것</i><b>'  + (f.mg.L.length?f.mg.L.join(' '):'—') + '</b></div>'
-      + '<div><i class="tr">오른쪽에 남은 것</i><b>' + (f.mg.R.length?f.mg.R.join(' '):'—') + '</b></div>'
-      + '<div><i>지금까지 만든 것</i><b>' + (f.mg.out.length?f.mg.out.join(' '):'—') + '</b></div>'
+      + '<div><i class="tl">L 에 남은 것</i><b>'  + (f.mg.L.length?f.mg.L.join(' '):'—') + '</b></div>'
+      + '<div><i class="tr">R 에 남은 것</i><b>' + (f.mg.R.length?f.mg.R.join(' '):'—') + '</b></div>'
+      + '<div><i>out (지금까지 만든 것)</i><b>' + (f.mg.out.length?f.mg.out.join(' '):'—') + '</b></div>'
       + '</div>';
     $('labMg').innerHTML=mgh;
   } else $('labMg').innerHTML='';
   $('labMsg').textContent=f.msg;
-  $('labC').textContent=f.c; $('labM').textContent=f.m;
+  $('labC').textContent=f.c;
   $('labStep').textContent=(LAB.k+1)+' / '+S.F.length;
   $('labRange').max=S.F.length-1; $('labRange').value=LAB.k;
 }
@@ -778,12 +781,11 @@ function play(){
 function stop(){ if(LAB.timer){clearInterval(LAB.timer); LAB.timer=null;} $('labPlay').textContent='▶ 재생'; }
 function compareAll(){
   var out='', rows=[];
-  for(var k in REC){ var S=REC[k](LAB.data); rows.push([NAME[k],S.c,S.m]); }
+  for(var k in REC){ var S=REC[k](LAB.data); rows.push([NAME[k],S.c]); }
   var mx=Math.max.apply(null,rows.map(function(r){return r[1];}));
   for(var i=0;i<rows.length;i++){
     out+='<tr><td>'+rows[i][0]+'</td><td class="n"><b>'+rows[i][1]+'</b></td>'
-       + '<td><div class="mini" style="width:'+Math.round(100*rows[i][1]/mx)+'%"></div></td>'
-       + '<td class="n">'+rows[i][2]+'</td></tr>';
+       + '<td><div class="mini" style="width:'+Math.round(100*rows[i][1]/mx)+'%"></div></td></tr>';
   }
   $('cmpBody').innerHTML=out;
   $('cmpData').textContent='['+LAB.data.join(', ')+']';
